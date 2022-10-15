@@ -26,6 +26,14 @@
   ],
   "author": "tassun_oro@hotmail.com",
   "license": "MIT",
+  "bugs":{
+    "url":"https://github.com/tassun/will-sql/issues"
+  },
+  "homepage":"https://github.com/tassun/will-sql#readme",
+  "repository": {
+    "type":"git",
+    "url":"https://github.com/tassun/will-sql.git"
+  },
   "dependencies": {
     "config": "^3.3.8",
     "mssql": "^9.0.1",
