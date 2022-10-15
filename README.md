@@ -1,0 +1,147 @@
+# will-sql
+
+Simple SQL by place holder parameter naming and value setting for execute statement on databases
+
+## Installation
+
+    npm install will-sql
+
+## Examples
+
+### Configuration
+
+This module require configuration([config](https://www.npmjs.com/package/config)) setting by config/default.json under project
+
+    npm install config
+
+```json
+{
+    "MYSQL" : { "alias": "mysql", "dialect": "mysql", "url": "mysql://user:password@localhost:3306/testdb?charset=utf8&connectionLimit=10", "user": "user", "password": "password" },
+	"ODBC" : { "alias": "odbc", "dialect": "mysql", "url": "DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=localhost;DATABASE=testdb;HOST=localhost;PORT=3306;UID=user;PWD=password;", "user": "user", "password": "password" },
+	"MSSQL": { "alias": "mssql", "dialect": "mssql", "url": "Server=localhost,1433;Database=testdb;User Id=user;Password=password;Encrypt=false;Trusted_Connection=Yes;", "user": "user", "password": "password" },
+	"ORACLE": { "alias": "oracle", "dialect": "oracle", "url": "localhost:1521/ORCLCDB.localdomain", "user": "user", "password": "password" }
+}
+```
+
+### Queries
+Since [mysql](https://www.npmjs.com/package/mysql), [mssql](https://www.npmjs.com/package/mssql), [odbc](https://www.npmjs.com/package/odbc), [oracledb](https://www.npmjs.com/package/oracledb) node module using difference place holder for parameter
+naming and value setting, like mysql and odbc using ? sign, mssql using @ sign and oracledb using : sign for naming parameters
+
+#### KnSQL
+KnSQL wrap up sql statement using only place holder ? sign as parameter naming and value setting
+
+##### java script
+```javascript
+const connector = require("will-sql");
+
+async function testdb() {
+    let knsql = new connector.KnSQL();
+    knsql.append("select * from testdbx where share = ?share ");
+    knsql.set("share","BBL");
+    const db = connector.getDBConnector("MYSQL");
+    let rs = await knsql.executeQuery(db);
+    console.log("rs",rs);
+    db.close();
+}
+```
+
+##### type script
+```typescript
+import { KnSQL, DBConnections } from "will-sql";
+
+async function testQuery() {
+    let knsql = new KnSQL();
+    knsql.append("select * from testdbx where share = ?share ");
+    knsql.set("share","BBL");
+    const db = DBConnections.getDBConnector("MYSQL");
+    let rs = await knsql.executeQuery(db);
+    console.log("rs",rs);
+    db.close();
+}
+```
+
+## Transaction
+
+```typescript
+async function testTransaction() {
+    let knsql = new KnSQL();
+    knsql.append("update testdbx set percent = ?percent where mktid = ?mktid ");
+    knsql.set("percent",60);
+    knsql.set("mktid","TST");
+    const db = DBConnections.getDBConnector("MYSQL");
+    await db.beginWork();
+    let rs = await knsql.executeUpdate(db);
+    console.log("update",rs);
+    await db.commitWork();
+    db.close();
+}
+```
+
+### Database Adapter
+Database adapter now support for mysql, mssql, odbc and oracledb when using database connector instance it can send raw sql statement depending on using database module
+
+#### mysql
+
+    npm install mysql
+
+```typescript
+import { DBConnections } from "will-sql";
+
+async function testdb() {
+    const db = DBConnections.getDBConnector("MYSQL");
+    let rs = await db.executeQuery("select * from testdbx where percent > ? ",{ 
+        percent: {value: 50, type: "DECIMAL"} 
+    });
+    console.log("rs",rs);
+    db.close();
+}
+```
+#### odbc
+
+    npm install odbc
+
+```typescript
+import { DBConnections } from "will-sql";
+
+async function testdb() {
+    const db = DBConnections.getDBConnector("ODBC");
+    let rs = await db.executeQuery("select * from testdbx where percent > ? ",{ 
+        percent: {value: 50, type: "DECIMAL"} 
+    });
+    console.log("rs2",rs);
+    db.close();
+}
+```
+#### mssql
+
+    npm install mssql
+
+```typescript
+import { DBConnections } from "will-sql";
+
+async function testdb() {
+    const db = DBConnections.getDBConnector("MSSQL");
+    console.log("db",db);
+    let rs = await db.executeQuery("select * from testdbx where percentage > @percentage ",{ 
+        percentage: {value: 50, type: "DECIMAL"} 
+    });
+    console.log("rs",rs);
+    db.close();
+}
+```
+#### oracledb
+
+    npm install oracledb
+
+```typescript
+import { DBConnections } from "will-sql";
+
+async function testdb() {
+    const db = DBConnections.getDBConnector("ORACLE");
+    let rs = await db.executeQuery("select * from testdbx where percentage > :percentage ",{ 
+        percentage: {value: 50, type: "DECIMAL"} 
+    });
+    console.log("rs",rs);
+    db.close();
+}
+```
