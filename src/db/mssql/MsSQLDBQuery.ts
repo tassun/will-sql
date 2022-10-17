@@ -16,15 +16,27 @@ export class MsSQLDBQuery {
     public static async executeQuery(conn: Request, query: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
         let sql = DBUtils.getQuery(query);
         this.assignParameters(conn, params);
+        let req = conn as any;
+        req.arrayRowMode = true;
         let result = await conn.query(sql);
-        return Promise.resolve({ rows: result.recordset, fields: null });
+        let rows = result.recordset;
+        let cols = (result as any).columns[0];
+        for(let idx in rows) {
+          let row = rows[idx];
+          let json : any = {};
+          cols.forEach((col:any) => {
+            json[col.name] = row[col.index]; 
+          });
+          rows[idx] = json;
+        };    
+        return Promise.resolve({ rows: rows, columns: cols });
     }
 
     public static async executeUpdate(conn: Request, query: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
         let sql = DBUtils.getQuery(query);
         this.assignParameters(conn, params);
         let result = await conn.query(sql);
-        return Promise.resolve({ rows: { affectedRows : result.rowsAffected[0] }, fields: null });
+        return Promise.resolve({ rows: { affectedRows : result.rowsAffected[0] }, columns: null });
     }
 
     public static beginWork(conn: Request) : Promise<void> {

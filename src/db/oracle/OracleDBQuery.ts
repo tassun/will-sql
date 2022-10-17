@@ -9,18 +9,20 @@ export class OracleDBQuery {
         let sql = DBUtils.getQuery(query);
         let [parameters] = DBUtils.extractDBParam(params);
         let result = await conn.execute(sql, parameters, {
-            outFormat: oracledb.OUT_FORMAT_OBJECT
+            outFormat: oracledb.OUT_FORMAT_OBJECT,
+            extendedMetaData: true
         });
-        return Promise.resolve({ rows: result.rows, fields: result.metaData });
+        return Promise.resolve({ rows: result.rows, columns: result.metaData });
     }
 
     public static async executeUpdate(conn: Connection, query: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
         let sql = DBUtils.getQuery(query);
         let [parameters] = DBUtils.extractDBParam(params);
         let result = await conn.execute(sql, parameters, {
-            outFormat: oracledb.OUT_FORMAT_OBJECT
+            outFormat: oracledb.OUT_FORMAT_OBJECT,
+            extendedMetaData: true
         });
-        return Promise.resolve({ rows: { affectedRows : result.rowsAffected }, fields: null });
+        return Promise.resolve({ rows: { affectedRows : result.rowsAffected }, columns: null });
     }
 
     public static beginWork(conn: Connection) : Promise<void> {

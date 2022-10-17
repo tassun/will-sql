@@ -12,7 +12,7 @@ export class MySQLDBQuery {
                 if(qerr) {
                     reject(qerr);
                 } else {
-                    resolve({ rows: rows, fields: fields });
+                    resolve({ rows: rows, columns: fields });
                 }
             });
         });
@@ -26,7 +26,7 @@ export class MySQLDBQuery {
                 if(qerr) {
                     reject(qerr);
                 } else {
-                    resolve({ rows: { affectedRows: rows.affectedRows }, fields: fields });
+                    resolve({ rows: { affectedRows: rows.affectedRows }, columns: fields });
                 }
             });
         });

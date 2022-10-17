@@ -20,7 +20,7 @@ declare enum DBTypes {
 declare type EnumDBTypes = keyof typeof DBTypes;
 interface ResultSet {
     rows: any;
-    fields: any;
+    columns: any;
 }
 interface SQLOptions {
     sql: string;

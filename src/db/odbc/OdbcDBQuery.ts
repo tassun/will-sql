@@ -22,7 +22,7 @@ export class OdbcDBQuery {
                 } else {
                     let columns = rows.columns;
                     this.removeAttributes(rows);
-                    resolve({ rows: rows, fields: columns });
+                    resolve({ rows: rows, columns: columns });
                 }
             });
         });
@@ -38,7 +38,7 @@ export class OdbcDBQuery {
                 } else {
                     let count = rows.count;
                     let columns = rows.columns;
-                    resolve({ rows: { affectedRows: count }, fields: columns });
+                    resolve({ rows: { affectedRows: count }, columns: columns });
                 }
             });
         });
@@ -53,7 +53,7 @@ export class OdbcDBQuery {
         const rows = await stm.execute();
         let columns = rows.columns;
         this.removeAttributes(rows);
-        return Promise.resolve({ rows: rows, fields: columns });
+        return Promise.resolve({ rows: rows, columns: columns });
     }
 
     public static async statementUpdate(conn: any, query: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
@@ -65,7 +65,7 @@ export class OdbcDBQuery {
         const rows = await stm.execute();
         let count = rows.count;
         let columns = rows.columns;
-        return Promise.resolve({ rows: { affectedRows: count }, fields: columns });
+        return Promise.resolve({ rows: { affectedRows: count }, columns: columns });
     }
 
     public static  beginWork(conn: any) : Promise<void> {
