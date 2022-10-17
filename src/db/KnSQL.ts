@@ -57,6 +57,8 @@ export class KnSQL {
         let mysql = dbalias == DBAlias.MYSQL;
         let mssql = dbalias == DBAlias.MSSQL;
         let oracle = dbalias == DBAlias.ORACLE;
+        let postgres = dbalias == DBAlias.POSTGRES;
+        let sqlidx = 0;
         let sqlstr = "";
         let paramnames : string[] = [];
         let tok = new StringTokenizer(this.sql,"?), \n",true);
@@ -64,12 +66,13 @@ export class KnSQL {
         while(it.hasNext()) {
             let element = it.next();
             if("?"==element) {
-                sqlstr += (mysql||odbc?"?":(mssql?"@":(oracle?":":element)));
+                sqlstr += (mysql||odbc?"?":(mssql?"@":(oracle?":":(postgres?"$":element))));
                 if(it.hasNext()) {
                     let item = it.next();
                     if(!(" "==item) && !(")"==item) && !(","==item) && !("\n"==item)) {
                         paramnames.push(item);
                         if(mssql || oracle) sqlstr += item;
+                        if(postgres) sqlstr += (++sqlidx); //$1,$2,$3,...
                     } else {
                         sqlstr += item;
                     }

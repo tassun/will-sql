@@ -26,6 +26,7 @@ export class DBUtils {
             if(Utilities.equalsIgnoreCase("MSSQL",alias)) return DBAlias.MSSQL;
             if(Utilities.equalsIgnoreCase("ODBC",alias)) return DBAlias.ODBC;
             if(Utilities.equalsIgnoreCase("ORACLE",alias)) return DBAlias.ORACLE;
+            if(Utilities.equalsIgnoreCase("POSTGRES",alias)) return DBAlias.POSTGRES;
             return DBAlias.MYSQL;
         } else {
             return alias;

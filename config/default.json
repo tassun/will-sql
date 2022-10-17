@@ -2,5 +2,6 @@
     "MYSQL" : { "alias": "mysql", "dialect": "mysql", "url": "mysql://root:root@localhost:3306/testdb?charset=utf8&connectionLimit=10", "user": "root", "password": "root" },
 	"ODBC" : { "alias": "odbc", "dialect": "mysql", "url": "DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=localhost;DATABASE=testdb;HOST=localhost;PORT=3306;UID=root;PWD=root;", "user": "root", "password": "root" },
 	"MSSQL": { "alias": "mssql", "dialect": "mssql", "url": "Server=localhost,1433;Database=refdb;User Id=sa;Password=sapassword;Encrypt=false;Trusted_Connection=Yes;", "user": "sa", "password": "sapassword" },
-	"ORACLE": { "alias": "oracle", "dialect": "oracle", "url": "localhost:1521/ORCLCDB.localdomain", "user": "tassan", "password": "tassan_oro" }
+	"ORACLE": { "alias": "oracle", "dialect": "oracle", "url": "localhost:1521/ORCLCDB.localdomain", "user": "tassan", "password": "tassan_oro" }, 
+	"POSTGRES": { "alias": "postgres", "dialect": "postgres", "url": "postgresql://postgres:root@localhost:5432/testdb", "user": "postgres", "password": "root" }
 }

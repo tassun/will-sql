@@ -1,4 +1,5 @@
 /node_modules/
 /dist/
+/declaration/
 /yarn-error.log
 /package-lock.json

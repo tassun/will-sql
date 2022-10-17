@@ -2,7 +2,8 @@ declare enum DBAlias {
     MYSQL = "MYSQL",
     MSSQL = "MSSQL",
     ODBC = "ODBC",
-    ORACLE = "ORACLE"
+    ORACLE = "ORACLE",
+    POSTGRES = "POSTGRES"
 }
 declare enum DBTypes {
     STRING = "STRING",
@@ -60,6 +61,7 @@ export interface DBConfig {
     url: string;
     user: string;
     password: string;
+    options?: any;
 }
 export declare const dbconfig: DBConfig;
 

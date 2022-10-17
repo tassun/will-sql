@@ -4,6 +4,7 @@ export interface DBConfig {
     url: string;
     user: string;
     password: string;
+    options?: any;
 }
 
 export const dbconfig : DBConfig = {

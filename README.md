@@ -19,13 +19,14 @@ This module require configuration([config](https://www.npmjs.com/package/config)
 	"MYSQL" : { "alias": "mysql", "dialect": "mysql", "url": "mysql://user:password@localhost:3306/testdb?charset=utf8&connectionLimit=10", "user": "user", "password": "password" },
 	"ODBC" : { "alias": "odbc", "dialect": "mysql", "url": "DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=localhost;DATABASE=testdb;HOST=localhost;PORT=3306;UID=user;PWD=password;", "user": "user", "password": "password" },
 	"MSSQL": { "alias": "mssql", "dialect": "mssql", "url": "Server=localhost,1433;Database=testdb;User Id=user;Password=password;Encrypt=false;Trusted_Connection=Yes;", "user": "user", "password": "password" },
-	"ORACLE": { "alias": "oracle", "dialect": "oracle", "url": "localhost:1521/ORCLCDB.localdomain", "user": "user", "password": "password" }
+	"ORACLE": { "alias": "oracle", "dialect": "oracle", "url": "localhost:1521/ORCLCDB.localdomain", "user": "user", "password": "password" },
+    "POSTGRES": { "alias": "postgres", "dialect": "postgres", "url": "postgresql://user:password@localhost:5432/testdb", "user": "user", "password": "password" }
 }
 ```
 
 ### Queries
-Since [mysql](https://www.npmjs.com/package/mysql), [mssql](https://www.npmjs.com/package/mssql), [odbc](https://www.npmjs.com/package/odbc), [oracledb](https://www.npmjs.com/package/oracledb) node module using difference place holder for parameter
-naming and value setting, like mysql and odbc using ? sign, mssql using @ sign and oracledb using : sign for naming parameters
+Since [mysql](https://www.npmjs.com/package/mysql), [mssql](https://www.npmjs.com/package/mssql), [odbc](https://www.npmjs.com/package/odbc), [oracledb](https://www.npmjs.com/package/oracledb), [postgres](https://www.npmjs.com/package/pg) node module using difference place holder for parameter
+naming and value setting, like mysql and odbc using ? sign, mssql using @ sign and oracledb using : sign, and postgres using $ sign for naming parameters
 
 #### KnSQL
 KnSQL wrap up sql statement using only place holder ? sign as parameter naming and value setting
@@ -63,6 +64,8 @@ async function testQuery() {
 ## Transaction
 
 ```typescript
+import { KnSQL, DBConnections } from "will-sql";
+
 async function testTransaction() {
     let knsql = new KnSQL();
     knsql.append("update testdbx set percent = ?percent where mktid = ?mktid ");
@@ -139,6 +142,22 @@ import { DBConnections } from "will-sql";
 async function testdb() {
     const db = DBConnections.getDBConnector("ORACLE");
     let rs = await db.executeQuery("select * from testdbx where percentage > :percentage ",{ 
+        percentage: {value: 50, type: "DECIMAL"} 
+    });
+    console.log("rs",rs);
+    db.close();
+}
+```
+#### postgres
+
+    npm install pg
+
+```typescript
+import { DBConnections } from "will-sql";
+
+async function testdb() {
+    const db = DBConnections.getDBConnector("POSTGRES");
+    let rs = await db.executeQuery("select * from testdbx where percentage > $1 ",{ 
         percentage: {value: 50, type: "DECIMAL"} 
     });
     console.log("rs",rs);

@@ -43,6 +43,10 @@ export class DBConnections {
             const OracleDB = require("./oracle/OracleDB");
             return new OracleDB({...dbconfig});
         }
+        if(Utilities.equalsIgnoreCase(dbconfig.alias,"POSTGRES")) {
+            const PgSQLDB = require("./postgres/PgSQLDB");
+            return new PgSQLDB({...dbconfig});
+        }
         throw new DBError("Database configuration '"+dbconfig.alias+"' not supported",-10002);
     }
 }
