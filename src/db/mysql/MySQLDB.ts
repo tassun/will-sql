@@ -6,16 +6,18 @@ import { DBConnect } from "../DBConnect";
 import { DBConfig } from '../DBConfig';
 
 class MySQLDB extends DBConnect {
+    protected connector : MySQLDBConnection;
     public connection? : Connection;
 
-    constructor(config?: DBConfig,connection?: Connection) {
+    constructor(config: DBConfig,connection?: Connection) {
         super("MYSQL","mysql",config);
+        this.connector = new MySQLDBConnection(config);
         this.connection = connection;
     }
 
-    private async initConnection() {
+    protected async initConnection() {
         if(this.connection==undefined || this.connection==null) {
-            this.connection = await MySQLDBConnection.getConnection();
+            this.connection = await this.connector.getConnection();
         }
     }
 

@@ -6,16 +6,18 @@ import { DBConnect } from "../DBConnect";
 import { DBConfig } from '../DBConfig';
 
 class PgSQLDB extends DBConnect {
+    protected connector: PgSQLDBConnection;
     public connection? : PoolClient;
 
-    constructor(config?: DBConfig,connection?: PoolClient) {
+    constructor(config: DBConfig,connection?: PoolClient) {
         super("POSTGRES","postgres",config);
+        this.connector = new PgSQLDBConnection(config);
         this.connection = connection;
     }
 
     private async initConnection() {
         if(this.connection==undefined || this.connection==null) {
-            this.connection = await PgSQLDBConnection.getConnection();
+            this.connection = await this.connector.getConnection();
         }
     }
 

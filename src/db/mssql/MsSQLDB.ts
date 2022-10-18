@@ -6,17 +6,19 @@ import { DBConnect } from "../DBConnect";
 import { DBConfig } from '../DBConfig';
 
 class MsSQLDB extends DBConnect {
+    protected connector: MsSQLDBConnection;
     public connection? : Request;
     public transaction? : Transaction;
 
-    constructor(config?: DBConfig,connection?: Request) {
+    constructor(config: DBConfig,connection?: Request) {
         super("MSSQL","mssql",config);
+        this.connector = new MsSQLDBConnection(config);
         this.connection = connection;
     }
 
-    private async initConnection() {
+    protected async initConnection() {
         if(this.connection==undefined || this.connection==null) {
-            this.connection = await MsSQLDBConnection.getConnection(this.transaction);
+            this.connection = await this.connector.getConnection(this.transaction);
         }
     }
 
@@ -41,7 +43,7 @@ class MsSQLDB extends DBConnect {
 
     public override async beginWork() : Promise<void> {
         this.reset();
-        this.transaction = await MsSQLDBConnection.getTransaction();
+        this.transaction = await this.connector.getTransaction();
         await this.initConnection();
         return await MsSQLDBQuery.beginWork(this.connection as Request);
     }

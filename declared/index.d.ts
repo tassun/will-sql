@@ -41,8 +41,8 @@ declare class DBParamValue implements DBValue {
 }
 interface DBConnector {
     readonly alias: DBAlias;
-    readonly dialect?: string;
-    readonly config?: DBConfig;
+    readonly dialect: string;
+    readonly config: DBConfig;
     init(): void;
     executeQuery(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;
     executeUpdate(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;
@@ -56,6 +56,7 @@ interface DBConnector {
 export { DBAlias, ResultSet, DBValue, DBParam, DBParamValue, DBTypes, SQLOptions, DBConnector };
 
 export interface DBConfig {
+    schema: string;
     alias: string;
     dialect: string;
     url: string;
@@ -81,9 +82,9 @@ export declare class DBUtils {
 declare type EnumDBAlias = keyof typeof DBAlias;
 export declare abstract class DBConnect implements DBConnector {
     readonly alias: DBAlias;
-    readonly dialect?: string;
-    readonly config?: DBConfig;
-    constructor(alias: (DBAlias | EnumDBAlias), dialect?: string, config?: DBConfig);
+    readonly dialect: string;
+    readonly config: DBConfig;
+    constructor(alias: (DBAlias | EnumDBAlias), dialect: string, config: DBConfig);
     init(): Promise<void>;
     executeQuery(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;
     executeUpdate(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;

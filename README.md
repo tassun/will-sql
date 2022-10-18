@@ -16,10 +16,10 @@ This module require configuration([config](https://www.npmjs.com/package/config)
 
 ```json
 {
-	"MYSQL" : { "alias": "mysql", "dialect": "mysql", "url": "mysql://user:password@localhost:3306/testdb?charset=utf8&connectionLimit=10", "user": "user", "password": "password" },
-	"ODBC" : { "alias": "odbc", "dialect": "mysql", "url": "DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=localhost;DATABASE=testdb;HOST=localhost;PORT=3306;UID=user;PWD=password;", "user": "user", "password": "password" },
-	"MSSQL": { "alias": "mssql", "dialect": "mssql", "url": "Server=localhost,1433;Database=testdb;User Id=user;Password=password;Encrypt=false;Trusted_Connection=Yes;", "user": "user", "password": "password" },
-	"ORACLE": { "alias": "oracle", "dialect": "oracle", "url": "localhost:1521/ORCLCDB.localdomain", "user": "user", "password": "password" },
+    "MYSQL" : { "alias": "mysql", "dialect": "mysql", "url": "mysql://user:password@localhost:3306/testdb?charset=utf8&connectionLimit=10", "user": "user", "password": "password" },
+    "ODBC" : { "alias": "odbc", "dialect": "mysql", "url": "DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=localhost;DATABASE=testdb;HOST=localhost;PORT=3306;UID=user;PWD=password;", "user": "user", "password": "password" },
+    "MSSQL": { "alias": "mssql", "dialect": "mssql", "url": "Server=localhost,1433;Database=testdb;User Id=user;Password=password;Encrypt=false;Trusted_Connection=Yes;", "user": "user", "password": "password" },
+    "ORACLE": { "alias": "oracle", "dialect": "oracle", "url": "localhost:1521/ORCLCDB.localdomain", "user": "user", "password": "password" },
     "POSTGRES": { "alias": "postgres", "dialect": "postgres", "url": "postgresql://user:password@localhost:5432/testdb", "user": "user", "password": "password" }
 }
 ```
@@ -61,7 +61,7 @@ async function testQuery() {
 }
 ```
 
-## Transaction
+### Transaction
 
 ```typescript
 import { KnSQL, DBConnections } from "will-sql";
@@ -81,7 +81,7 @@ async function testTransaction() {
 ```
 
 ### Database Adapter
-Database adapter now support for mysql, mssql, odbc and oracledb when using database connector instance it can send raw sql statement depending on using database module
+Database adapter now support for mysql, mssql, odbc, postgres and oracledb when using database connector instance it can send raw sql statement depending on using database module
 
 #### mysql
 
@@ -162,5 +162,23 @@ async function testdb() {
     });
     console.log("rs",rs);
     db.close();
+}
+```
+
+### Connection Pool
+Every database adapter has connector via connection pool then after used, all connection pools must be closed (or else it do not exit to commamd prompt when running as stand alone application)
+
+```typescript
+import { KnSQL, DBConnections } from "will-sql";
+
+async function testQuery() {
+    let knsql = new KnSQL();
+    knsql.append("select * from testdbx where share = ?share ");
+    knsql.set("share","BBL");
+    const db = DBConnections.getDBConnector("MYSQL");
+    let rs = await knsql.executeQuery(db);
+    console.log("rs",rs);
+    db.close(); //release connection to pool
+    db.end(); //close connection pool
 }
 ```

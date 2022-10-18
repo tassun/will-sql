@@ -25,6 +25,7 @@ async function testupdate() {
         sharecode: {value: "BBL", type: "STRING"}
     });
     console.log("rs2",rs);
+    db.close();
     db.end();
 }
 

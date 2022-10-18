@@ -1,30 +1,31 @@
-import mssql from 'mssql';
 import { Request, ConnectionPool, Transaction } from 'mssql';
-import { dbconfig } from "../DBConfig";
+import { DBConfig } from "../DBConfig";
+import { MsSQLPoolManager } from './MsSQLPoolManager';
 
 export class MsSQLDBConnection {
-    private static pool?: ConnectionPool;
+    private config: DBConfig;
 
-    private static async initPool() {
-        if(!this.pool) {
-            let appool = new mssql.ConnectionPool(dbconfig.url);
-            this.pool = await appool.connect();
-        }
+    constructor(config: DBConfig) {
+        this.config = config;
     }
-        
-    public static async getConnection(transaction?: Transaction) : Promise<Request> {
-        await this.initPool();
+
+    private async getPool() : Promise<ConnectionPool> {
+        return await MsSQLPoolManager.getPool(this.config);
+    }
+
+    public async getConnection(transaction?: Transaction) : Promise<Request> {
+        let pool = await this.getPool();
         if(transaction) {
             let request = transaction.request();
             request.transaction = transaction;
             return Promise.resolve(request);
         }
-        return Promise.resolve((this.pool as ConnectionPool).request());
+        return Promise.resolve(pool.request());
     }
 
-    public static async getTransaction() : Promise<Transaction> {
-        await this.initPool();
-        return Promise.resolve((this.pool as ConnectionPool).transaction());
+    public async getTransaction() : Promise<Transaction> {
+        let pool = await this.getPool();
+        return Promise.resolve(pool.transaction());
     }
     
     public static releaseConnection(conn?: ConnectionPool) {
@@ -40,11 +41,7 @@ export class MsSQLDBConnection {
     }
     
     public static releasePool() {
-        if(this.pool) {
-            this.pool.close((err: any) => {
-                //if(err) console.error(err);
-            });
-        }
+        MsSQLPoolManager.destroy();
     }
 
 }

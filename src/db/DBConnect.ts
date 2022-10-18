@@ -6,10 +6,10 @@ type EnumDBAlias = keyof typeof DBAlias;
 
 export abstract class DBConnect implements DBConnector {
     public readonly alias: DBAlias;
-    public readonly dialect?: string;
-    public readonly config?: DBConfig;
+    public readonly dialect: string;
+    public readonly config: DBConfig;
 
-    constructor(alias: (DBAlias | EnumDBAlias), dialect?: string, config?: DBConfig) {
+    constructor(alias: (DBAlias | EnumDBAlias), dialect: string, config: DBConfig) {
         this.alias = DBUtils.parseDBAlias(alias);
         this.dialect = dialect;
         this.config = config;

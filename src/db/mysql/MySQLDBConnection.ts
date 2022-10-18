@@ -1,20 +1,22 @@
-import mysql from 'mysql';
 import { Connection, Pool, PoolConnection, MysqlError } from 'mysql';
-import { dbconfig } from "../DBConfig";
+import { DBConfig } from "../DBConfig";
+import { MySQLPoolManager } from './MySQLPoolManager';
 
 export class MySQLDBConnection {
-    static pool: Pool;
+    private config: DBConfig;
 
-    private static initPool() {
-        if(!this.pool) {
-            this.pool = mysql.createPool(dbconfig.url);
-        }
+    constructor(config: DBConfig) {
+        this.config = config;
     }
-        
-    public static getConnection() : Promise<Connection> {
-        this.initPool();
+
+    private getPool() : Pool {
+        return MySQLPoolManager.getPool(this.config);
+    }
+
+    public getConnection() : Promise<Connection> {
+        let pool = this.getPool();
         return new Promise<Connection>((resolve, reject) => {
-            this.pool.getConnection((cerr: MysqlError, conn: Connection) => {
+            pool.getConnection((cerr: MysqlError, conn: Connection) => {
                 if(cerr) {
                     if(conn) MySQLDBConnection.releaseConnection(conn);
                     reject(cerr);
@@ -25,9 +27,9 @@ export class MySQLDBConnection {
         });
     }
     
-    public static getConnectionAsync(callback: Function) {
-        this.initPool();
-        this.pool.getConnection((cerr: MysqlError, conn: Connection) => {
+    public getConnectionAsync(callback: Function) {
+        let pool = this.getPool();
+        pool.getConnection((cerr: MysqlError, conn: Connection) => {
             if(cerr) {
                 if(conn) MySQLDBConnection.releaseConnection(conn);
                 callback(cerr, null);
@@ -47,11 +49,7 @@ export class MySQLDBConnection {
     }
     
     public static releasePool() {
-        if(this.pool) {
-            this.pool.end((err: any) => {
-                //if(err) console.error(err);
-            });
-        }
+        MySQLPoolManager.destroy();
     }
 
 }

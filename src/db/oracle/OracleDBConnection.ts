@@ -1,24 +1,22 @@
-import oracledb from 'oracledb';
 import { Connection, Pool, DBError } from 'oracledb';
-import { dbconfig } from "../DBConfig";
+import { DBConfig } from "../DBConfig";
+import { OraclePoolManager } from './OraclePoolManager';
 
 export class OracleDBConnection {
-    static pool: Pool;
+    private config: DBConfig;
 
-    private static async initPool() {
-        if(!this.pool) {
-            this.pool = await oracledb.createPool({
-                user: dbconfig.user,
-                password: dbconfig.password,
-                connectionString: dbconfig.url
-            });
-        }
+    constructor(config: DBConfig) {
+        this.config = config;
     }
-        
-    public static async getConnection() : Promise<Connection> {
-        await this.initPool();
+
+    private async getPool() : Promise<Pool> {
+        return await OraclePoolManager.getPool(this.config);
+    }
+
+    public async getConnection() : Promise<Connection> {
+        let pool = await this.getPool();
         return new Promise<Connection>((resolve, reject) => {
-            this.pool.getConnection((cerr: DBError, conn: Connection) => {
+            pool.getConnection((cerr: DBError, conn: Connection) => {
                 if(cerr) {
                     if(conn) OracleDBConnection.releaseConnection(conn);
                     reject(cerr);
@@ -40,11 +38,7 @@ export class OracleDBConnection {
     }
  
     public static releasePool() {
-        if(this.pool) {
-            this.pool.close((err: any) => {
-                //if(err) console.error(err);
-            });
-        }
+        OraclePoolManager.destroy();
     }
     
 }

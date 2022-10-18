@@ -1,21 +1,22 @@
 import { Pool, PoolClient } from 'pg';
-import { dbconfig } from "../DBConfig";
+import { DBConfig } from "../DBConfig";
+import { PgSQLPoolManager } from "./PgSQLPoolManager";
 
 export class PgSQLDBConnection {
-    static pool: Pool;
+    private config: DBConfig;
 
-    private static initPool() {
-        if(!this.pool) {
-            this.pool = new Pool({
-                connectionString: dbconfig.url,
-            });
-        }
+    constructor(config: DBConfig) {
+        this.config = config;
+    }
+
+    private getPool() : Pool {
+        return PgSQLPoolManager.getPool(this.config);
     }
         
-    public static getConnection() : Promise<PoolClient> {
-        this.initPool();
+    public getConnection() : Promise<PoolClient> {
+        let pool = this.getPool();
         return new Promise<PoolClient>((resolve, reject) => {
-            this.pool.connect((cerr: any, conn: PoolClient) => {
+            pool.connect((cerr: any, conn: PoolClient) => {
                 if(cerr) {
                     if(conn) PgSQLDBConnection.releaseConnection(conn);
                     reject(cerr);
@@ -26,9 +27,9 @@ export class PgSQLDBConnection {
         });
     }
     
-    public static getConnectionAsync(callback: Function) {
-        this.initPool();
-        this.pool.connect((cerr: any, conn: PoolClient) => {
+    public getConnectionAsync(callback: Function) {
+        let pool = this.getPool();
+        pool.connect((cerr: any, conn: PoolClient) => {
             if(cerr) {
                 if(conn) PgSQLDBConnection.releaseConnection(conn);
                 callback(cerr, null);
@@ -47,10 +48,7 @@ export class PgSQLDBConnection {
     }
     
     public static releasePool() {
-        if(this.pool) {
-            this.pool.end(() => {
-            });
-        }
+        PgSQLPoolManager.destroy();
     }
 
 }

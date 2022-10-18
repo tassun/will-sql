@@ -6,16 +6,18 @@ import { DBConnect } from "../DBConnect";
 import { DBConfig } from '../DBConfig';
 
 class OracleDB extends DBConnect {
+    protected connector :  OracleDBConnection;
     public connection? : Connection;
 
-    constructor(config?: DBConfig,connection?: Connection) {
+    constructor(config: DBConfig,connection?: Connection) {
         super("ORACLE","oracle",config);
+        this.connector = new OracleDBConnection(config);
         this.connection = connection;
     }
 
     private async initConnection() {
         if(this.connection==undefined || this.connection==null) {
-            this.connection = await OracleDBConnection.getConnection();
+            this.connection = await this.connector.getConnection();
         }
     }
 

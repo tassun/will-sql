@@ -1,23 +1,25 @@
-import { dbconfig } from "../DBConfig";
-const odbc = require("odbc");
+import { DBConfig } from "../DBConfig";
+import { OdbcPoolManager } from "./OdbcPoolManager";
 
 export class OdbcDBConnection {
-    static pool: any;
+    private config: DBConfig;
 
-    private static async initPool() {
-        if(!this.pool) {
-            this.pool = await odbc.pool(dbconfig.url);
-        }
+    constructor(config: DBConfig) {
+        this.config = config;
+    }
+
+    private async getPool() : Promise<any> {
+        return await OdbcPoolManager.getPool(this.config);
     }
         
-    public static async getConnection() : Promise<any> {
-        await this.initPool();
-        return await this.pool.connect();
+    public async getConnection() : Promise<any> {
+        let pool = await this.getPool();
+        return await pool.connect();
     }
     
-    public static async getConnectionAsync(callback: Function) {
-        await this.initPool();
-        this.pool.connect((cerr: any, conn: any) => {
+    public async getConnectionAsync(callback: Function) {
+        let pool = await this.getPool();
+        pool.connect((cerr: any, conn: any) => {
             if(cerr) {
                 callback(cerr, null);
             } else {
@@ -35,11 +37,7 @@ export class OdbcDBConnection {
     }
     
     public static releasePool() {
-        if(this.pool) {
-            this.pool.close((err: any) => {
-                //if(err) console.error(err);
-            });
-        }
+        OdbcPoolManager.destroy();
     }
 
 }

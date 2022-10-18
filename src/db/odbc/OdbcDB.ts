@@ -5,16 +5,18 @@ import { DBConnect } from "../DBConnect";
 import { DBConfig } from "../DBConfig";
 
 class OdbcDB extends DBConnect {
+    protected connector : OdbcDBConnection;
     public connection? : any;
 
-    constructor(dialect?: string,config?: DBConfig,connection?: any) {
+    constructor(dialect: string,config: DBConfig,connection?: any) {
         super("ODBC",dialect,config);
+        this.connector = new OdbcDBConnection(config);
         this.connection = connection;
     }
 
-    private async initConnection() {
+    protected async initConnection() {
         if(this.connection==undefined || this.connection==null) {
-            this.connection = await OdbcDBConnection.getConnection();
+            this.connection = await this.connector.getConnection();
         }
     }
 

@@ -39,8 +39,8 @@ class DBParamValue implements DBValue {
 
 interface DBConnector {
     readonly alias: DBAlias;
-    readonly dialect?: string;
-    readonly config?: DBConfig;
+    readonly dialect: string;
+    readonly config: DBConfig;
     
     init() : void;
     executeQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet>;

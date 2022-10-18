@@ -1,4 +1,5 @@
 export interface DBConfig {
+    schema: string;
     alias: string,
     dialect: string;
     url: string;
@@ -8,6 +9,7 @@ export interface DBConfig {
 }
 
 export const dbconfig : DBConfig = {
+    schema: "",
     alias: "",
     dialect: "",
     url: "",

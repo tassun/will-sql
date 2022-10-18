@@ -21,6 +21,7 @@ async function testupdate() {
     let rs = await knsql.executeUpdate(db);
     console.log("update",rs);
     await db.commitWork();
+    db.close();
     db.end();
 }
 
