@@ -6,6 +6,7 @@ async function testdb() {
     knsql.append("select * from testdbx where share = ?share ");
     knsql.set("share","BBL");
     const db = DBConnections.getDBConnector("MYSQL");
+    console.log("db",db);
     let rs = await db.execQuery(knsql);
     console.log("rs",rs);
     db.close();

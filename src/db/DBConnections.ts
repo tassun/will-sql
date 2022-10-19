@@ -10,7 +10,7 @@ export class DBConnections {
         //console.log("config",config);
         if(typeof configure === "string") {
             if(config.has(configure)) {
-                let section = config.get(configure) as any;
+                let section = config.get(configure) as DBConfig;
                 dbconfig.schema = configure;
                 dbconfig.alias = section["alias"];
                 dbconfig.dialect = section["dialect"];
@@ -51,7 +51,7 @@ export class DBConnections {
             const PgSQLDB = require("./postgres/PgSQLDB");
             return new PgSQLDB({...dbconfig});
         }
-        throw new DBError("Database configuration '"+dbconfig.alias+"' not supported",-10002);
+        throw new DBError("Database alias '"+dbconfig.alias+"' not supported",-10002);
     }
 }
 

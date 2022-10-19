@@ -105,7 +105,7 @@ For example `"MYSQL"` point to section in config/default.json
 Multiple pool supported by section or `schema` setting so it can defined in difference way 
 
 ### Database Adapter
-Database adapter now support for mysql, mssql, odbc, oracledb and postgres when using database connector instance it can send raw query statement depending on using database module
+Database adapter now support for `mysql`, `mssql`, `odbc`, `oracle` and `postgres` alias setting. When using database connector instance it can send raw query statement depending on database module
 
 #### mysql
 
