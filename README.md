@@ -1,6 +1,6 @@
 # will-sql
 
-Simple SQL by place holder parameter naming and value setting for execute statement on databases
+SQL by place holder parameter naming and value setting for execute statement on databases
 
 ## Installation
 
@@ -29,7 +29,7 @@ Since [mysql](https://www.npmjs.com/package/mysql), [mssql](https://www.npmjs.co
 naming and value setting, like mysql and odbc using ? sign, mssql using @ sign and oracledb using : sign, and postgres using $ sign for naming parameters
 
 #### KnSQL
-KnSQL wrap up sql statement using only place holder ? sign as parameter naming and value setting
+KnSQL wrap up query statement using only place holder ? sign as parameter naming and value setting
 
 ##### java script
 ```javascript
@@ -80,8 +80,32 @@ async function testTransaction() {
 }
 ```
 
+### Database Connector
+In order to get database connection `DBConnections.getDBConnector` or `getDBConnector` method can specified by configuration section or configuration setting to establish
+
+#### configuration section
+
+```typescript
+    const db = DBConnections.getDBConnector("MYSQL");
+```
+For example `"MYSQL"` point to section in config/default.json
+
+#### configuration setting
+
+```typescript
+    const db = DBConnections.getDBConnector({
+        schema: "MYSQL", 
+        alias: "mysql", 
+        dialect: "mysql", 
+        url: "mysql://user:password@localhost:3306/testdb?charset=utf8&connectionLimit=10", 
+        user: "user", 
+        password: "password"
+    });
+```
+Multiple pool supported by section or `schema` setting so it can defined in difference way 
+
 ### Database Adapter
-Database adapter now support for mysql, mssql, odbc, postgres and oracledb when using database connector instance it can send raw sql statement depending on using database module
+Database adapter now support for mysql, mssql, odbc, oracledb and postgres when using database connector instance it can send raw query statement depending on using database module
 
 #### mysql
 
