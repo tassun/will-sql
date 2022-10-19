@@ -6,6 +6,7 @@ export {
     DBParamValue,
     DBTypes,
     SQLOptions,
+    SQLInterface,
     DBConnector    
  } from "./db/DBAlias";
 export { DBConfig, dbconfig } from "./db/DBConfig";

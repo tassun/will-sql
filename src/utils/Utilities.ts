@@ -10,7 +10,7 @@ export class Utilities {
 
 	public static getDateNow(now?: Date) : string { 
 		if(!now) now  = new Date(); 
-		return Utilities.formatDate(now,false);
+		return this.formatDate(now,false);
 	} 
 
 	public static getTimeNow(now?: Date) : string { 
@@ -24,17 +24,17 @@ export class Utilities {
 		return result; 
 	} 
 
-	public static getDateTimeNow(now?: Date) {
+	public static getDateTimeNow(now?: Date) : string {
 		if(!now) now = new Date(); 
-		return Utilities.getDateNow(now)+" "+Utilities.getTimeNow(now);
+		return this.getDateNow(now)+" "+this.getTimeNow(now);
 	}
 
 	public static getYMD(now?: Date) : string {
-		return Utilities.formatDate(now,true);
+		return this.formatDate(now,true);
 	}
 
 	public static getDMY(now?: Date) : string {
-		return Utilities.formatDate(now,false);
+		return this.formatDate(now,false);
 	}
 
 	public static formatDate(now?: Date, ymd: boolean = false) : string { 
@@ -84,7 +84,7 @@ export class Utilities {
 
 	public static currentDateTime(now?: Date) : string { 
 		if(!now) now  = new Date(); 
-		return Utilities.currentDate(now)+" "+Utilities.currentTime(now);
+		return this.currentDate(now)+" "+this.currentTime(now);
 	}
 
 	public static currentTimeMillis(now?: Date) : number {
@@ -101,10 +101,9 @@ export class Utilities {
 
 	public static compareDate(adate?: Date, bdate?: Date) : number {
 		if(!adate && !bdate) return 0;
-		let astr = Utilities.formatDate(adate,true);
-		let bstr = Utilities.formatDate(bdate,true);
-		return Utilities.compareString(astr,bstr);
-		//return astr.localeCompare(bstr as string, undefined, { sensitivity: 'accent' });
+		let astr = this.formatDate(adate,true);
+		let bstr = this.formatDate(bdate,true);
+		return this.compareString(astr,bstr);
 	}
 
 	public static compareString(astr?: string, bstr?: string) : number {
@@ -119,13 +118,13 @@ export class Utilities {
 		return this.compareString(astr,bstr)==0;
 	}
 
-	public static isString(value: any) {
+	public static isString(value: any) : boolean {
 		return typeof value === 'string' || value instanceof String;
 	}
 
     public static parseNumber(defaultValue: number, dataValue?: any) : number {
         if(dataValue) {
-            if(Utilities.isString(dataValue)) {
+            if(this.isString(dataValue)) {
                 return parseInt(""+dataValue);
             } else {
                 return dataValue as number;

@@ -46,6 +46,8 @@ interface DBConnector {
     init(): void;
     executeQuery(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;
     executeUpdate(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;
+    execQuery(sql: SQLInterface): Promise<ResultSet>;
+    execUpdate(sql: SQLInterface): Promise<ResultSet>;
     beginWork(): Promise<void>;
     commitWork(): Promise<void>;
     rollbackWork(): Promise<void>;
@@ -53,7 +55,17 @@ interface DBConnector {
     close(): void;
     end(): void;
 }
-export { DBAlias, ResultSet, DBValue, DBParam, DBParamValue, DBTypes, SQLOptions, DBConnector };
+interface SQLInterface {
+    clear(): void;
+    clearParameter(): void;
+    append(sql: string): SQLInterface;
+    set(paramname: string, paramvalue: (string | number | boolean | bigint | null | undefined | Date | Buffer | DBParamValue), paramtype: (DBTypes | EnumDBTypes)): SQLInterface;
+    param(name: string): DBValue;
+    executeQuery(db: DBConnector): Promise<ResultSet>;
+    executeUpdate(db: DBConnector): Promise<ResultSet>;
+    getSQLOptions(db: DBConnector): [SQLOptions, DBParam];
+}
+export { DBAlias, ResultSet, DBValue, DBParam, DBParamValue, DBTypes, SQLOptions, SQLInterface, DBConnector };
 
 export interface DBConfig {
     schema: string;
@@ -88,6 +100,8 @@ export declare abstract class DBConnect implements DBConnector {
     init(): Promise<void>;
     executeQuery(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;
     executeUpdate(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;
+    execQuery(sql: SQLInterface): Promise<ResultSet>;
+    execUpdate(sql: SQLInterface): Promise<ResultSet>;
     beginWork(): Promise<void>;
     commitWork(): Promise<void>;
     rollbackWork(): Promise<void>;
@@ -102,18 +116,20 @@ export declare class DBConnections {
 export declare function getDBConnector(section: string): DBConnector;
 
 declare type EnumDBTypes = keyof typeof DBTypes;
-export declare class KnSQL {
+export declare class KnSQL implements SQLInterface {
     sql: string;
     options?: any;
     readonly params: Map<string, DBValue>;
     constructor(sql?: string, options?: any);
     clear(): void;
+    clearParameter(): void;
     append(sql: string): KnSQL;
     set(paramname: string, paramvalue: (string | number | boolean | bigint | null | undefined | Date | Buffer | DBParamValue), paramtype?: (DBTypes | EnumDBTypes)): KnSQL;
     param(name: string): DBValue;
     getExactlySql(alias?: (string | DBAlias)): [string, string[]];
     parameters(names: string[]): any;
     getDBParam(names: string[]): DBParam;
+    getSQLOptions(db: DBConnector): [SQLOptions, DBParam];
     executeQuery(db: DBConnector): Promise<ResultSet>;
     executeUpdate(db: DBConnector): Promise<ResultSet>;
 }

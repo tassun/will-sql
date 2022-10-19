@@ -45,12 +45,27 @@ interface DBConnector {
     init() : void;
     executeQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet>;
     executeUpdate(sql: string| SQLOptions, params?: DBParam) : Promise<ResultSet>;
+    execQuery(sql: SQLInterface) : Promise<ResultSet>;
+    execUpdate(sql: SQLInterface) : Promise<ResultSet>;
     beginWork() : Promise<void>;
     commitWork() : Promise<void>;
     rollbackWork() : Promise<void>;
     reset() : void;
     close() : void;
     end() : void;
+}
+
+interface SQLInterface {
+    clear() : void;
+    clearParameter() : void;
+    append(sql: string) : SQLInterface;
+    set(paramname: string, 
+        paramvalue: (string | number | boolean | bigint | null | undefined | Date | Buffer | DBParamValue), 
+        paramtype: (DBTypes | EnumDBTypes)) : SQLInterface;
+    param(name: string) : DBValue;
+    executeQuery(db: DBConnector) : Promise<ResultSet>;
+    executeUpdate(db: DBConnector) : Promise<ResultSet>;
+    getSQLOptions(db: DBConnector) : [SQLOptions, DBParam];
 }
 
 export {
@@ -61,5 +76,6 @@ export {
     DBParamValue,
     DBTypes,
     SQLOptions,
+    SQLInterface,
     DBConnector    
 }

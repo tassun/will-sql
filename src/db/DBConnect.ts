@@ -1,5 +1,5 @@
 import { DBUtils } from "./DBUtils";
-import { DBConnector, DBAlias, DBParam, SQLOptions, ResultSet } from "./DBAlias";
+import { DBConnector, DBAlias, DBParam, SQLOptions, ResultSet, SQLInterface } from "./DBAlias";
 import { DBConfig } from "./DBConfig";
 
 type EnumDBAlias = keyof typeof DBAlias;
@@ -25,6 +25,14 @@ export abstract class DBConnect implements DBConnector {
 
     public async executeUpdate(sql: string| SQLOptions, params?: DBParam) : Promise<ResultSet> {
         return Promise.reject(null);
+    }
+
+    public async execQuery(sql: SQLInterface) : Promise<ResultSet> {
+        return sql.executeQuery(this);
+    }
+
+    public async execUpdate(sql: SQLInterface) : Promise<ResultSet> {
+        return sql.executeUpdate(this);
     }
 
     public async beginWork() : Promise<void> {

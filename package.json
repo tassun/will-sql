@@ -1,7 +1,7 @@
 {
   "name": "will-sql",
-  "version": "1.0.3",
-  "description": "Simple SQL by place holder parameter naming and value setting for execute statement on databases",
+  "version": "1.0.4",
+  "description": "SQL by place holder parameter naming and value setting for execute statement on databases",
   "main": "index.js",
   "scripts": {
     "build": "tsc --project ./",
@@ -10,6 +10,7 @@
     "db:odbc": "ts-node-dev src/test/test.db.odbc.ts",
     "db:oracle": "ts-node-dev src/test/test.db.oracle.ts",
     "db:pg": "ts-node-dev src/test/test.db.postgres.ts",
+    "db:exec": "ts-node-dev src/test/test.db.exec.ts",
     "kn:mysql": "ts-node-dev src/test/test.kn.mysql.ts",
     "kn:mssql": "ts-node-dev src/test/test.kn.mssql.ts",
     "kn:odbc": "ts-node-dev src/test/test.kn.odbc.ts",

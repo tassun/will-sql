@@ -1,10 +1,10 @@
 import { StringTokenizer } from "../utils/StringTokenizer";
-import { DBConnector, DBAlias, DBTypes, DBParam, DBValue, DBParamValue, ResultSet } from "./DBAlias";
+import { DBConnector, DBAlias, DBTypes, DBParam, DBValue, DBParamValue, ResultSet, SQLOptions, SQLInterface } from "./DBAlias";
 import { DBUtils } from "./DBUtils";
 import { DBError } from "./DBError";
 
 type EnumDBTypes = keyof typeof DBTypes;
-export class KnSQL {
+export class KnSQL implements SQLInterface {
     public sql: string;
     public options?: any;
     public readonly params : Map<string,DBValue> = new Map();
@@ -14,6 +14,9 @@ export class KnSQL {
     }
     public clear() : void {
         this.sql = "";
+        this.params.clear();
+    }
+    public clearParameter() : void {
         this.params.clear();
     }
     public append(sql: string) : KnSQL {
@@ -102,14 +105,17 @@ export class KnSQL {
         }
         return results;
     }
-    public async executeQuery(db: DBConnector) : Promise<ResultSet> {
+    public getSQLOptions(db: DBConnector) : [SQLOptions, DBParam] {
         let [sql,paramnames] = this.getExactlySql(db.alias);
         let dbparam = this.getDBParam(paramnames);
-        return db.executeQuery({ sql: sql, options: this.options }, dbparam);
+        return [{ sql: sql, options: this.options }, dbparam];
+    }
+    public async executeQuery(db: DBConnector) : Promise<ResultSet> {
+        let [sqlopts,dbparam] = this.getSQLOptions(db);
+        return db.executeQuery(sqlopts, dbparam);
     }
     public async executeUpdate(db: DBConnector) : Promise<ResultSet> {
-        let [sql,paramnames] = this.getExactlySql(db.alias);
-        let dbparam = this.getDBParam(paramnames);
-        return db.executeUpdate({ sql: sql, options: this.options }, dbparam);
+        let [sqlopts,dbparam] = this.getSQLOptions(db);
+        return db.executeUpdate(sqlopts, dbparam);
     }
 }
