@@ -56,6 +56,7 @@ interface DBConnector {
 }
 
 interface SQLInterface {
+    params : Map<string,DBValue>;
     clear() : void;
     clearParameter() : void;
     append(sql: string) : SQLInterface;

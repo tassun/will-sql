@@ -25,7 +25,7 @@ This module require configuration([config](https://www.npmjs.com/package/config)
 ```
 
 ### Queries
-Since [mysql](https://www.npmjs.com/package/mysql), [mssql](https://www.npmjs.com/package/mssql), [odbc](https://www.npmjs.com/package/odbc), [oracledb](https://www.npmjs.com/package/oracledb), [postgres](https://www.npmjs.com/package/pg) node module using difference place holder for parameter
+Since [mysql](https://www.npmjs.com/package/mysql), [mssql](https://www.npmjs.com/package/mssql), [odbc](https://www.npmjs.com/package/odbc), [oracle](https://www.npmjs.com/package/oracledb), [postgres](https://www.npmjs.com/package/pg) node module using difference place holder for parameter
 naming and value setting, like mysql and odbc using ? sign, mssql using @ sign and oracledb using : sign, and postgres using $ sign for naming parameters
 
 #### KnSQL
@@ -190,7 +190,7 @@ async function testdb() {
 ```
 
 ### Connection Pool
-Every database adapter has connector via connection pool then after used, all connection pools must be closed (or else it do not exit to commamd prompt when running as stand alone application)
+Database adapter has connector via connection pool then after used, all connection pools must be closed (or else it do not exit to commamd prompt when running as stand alone application)
 
 ```typescript
 import { KnSQL, DBConnections } from "will-sql";

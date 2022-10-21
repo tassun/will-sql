@@ -56,6 +56,7 @@ interface DBConnector {
     end(): void;
 }
 interface SQLInterface {
+    params: Map<string, DBValue>;
     clear(): void;
     clearParameter(): void;
     append(sql: string): SQLInterface;
@@ -89,6 +90,7 @@ export declare class DBUtils {
     static parseSQLOptions(query: string | SQLOptions): SQLOptions | undefined;
     static getQuery(query: string | SQLOptions): string;
     static extractDBParam(params?: DBParam): [any, string[], string[]];
+    static isSQLInterface(element: unknown): element is SQLInterface;
 }
 
 declare type EnumDBAlias = keyof typeof DBAlias;
@@ -98,6 +100,8 @@ export declare abstract class DBConnect implements DBConnector {
     readonly config: DBConfig;
     constructor(alias: (DBAlias | EnumDBAlias), dialect: string, config: DBConfig);
     init(): Promise<void>;
+    protected doExecuteQuery(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;
+    protected doExecuteUpdate(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;
     executeQuery(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;
     executeUpdate(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;
     execQuery(sql: SQLInterface): Promise<ResultSet>;
@@ -171,4 +175,5 @@ export declare class Utilities {
     static equalsIgnoreCase(astr?: string, bstr?: string): boolean;
     static isString(value: any): boolean;
     static parseNumber(defaultValue: number, dataValue?: any): number;
+    static hasAttributes: <T extends string>(element: unknown, attributes: T[]) => element is Record<T, unknown>;
 }

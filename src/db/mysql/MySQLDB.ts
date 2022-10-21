@@ -29,12 +29,12 @@ class MySQLDB extends DBConnect {
         this.connection = undefined;
     }
 
-    public override async executeQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
         await this.initConnection();
         return await MySQLDBQuery.executeQuery(this.connection as Connection,sql, params);
     }        
 
-    public async executeUpdate(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected async doExecuteUpdate(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
         await this.initConnection();
         return await MySQLDBQuery.executeUpdate(this.connection as Connection,sql, params);
     }

@@ -31,12 +31,12 @@ class MsSQLDB extends DBConnect {
         this.transaction = undefined;
     }
 
-    public override async executeQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
         await this.initConnection();
         return await MsSQLDBQuery.executeQuery(this.connection as Request,sql, params);
     }        
 
-    public async executeUpdate(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteUpdate(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
         await this.initConnection();
         return await MsSQLDBQuery.executeUpdate(this.connection as Request,sql, params);
     }

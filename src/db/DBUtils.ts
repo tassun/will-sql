@@ -1,5 +1,5 @@
 import { Utilities } from "../utils/Utilities";
-import { DBAlias, DBTypes, SQLOptions, DBParam } from "./DBAlias";
+import { DBAlias, DBTypes, SQLOptions, DBParam, SQLInterface } from "./DBAlias";
 
 export class DBUtils {
     public static parseDBTypes(type:string | DBTypes) : DBTypes {
@@ -62,6 +62,12 @@ export class DBUtils {
             }
         }
         return [paravalues, paranames, paratypes];
+    }
+
+    public static isSQLInterface(element: unknown) : element is SQLInterface {
+        return Utilities.hasAttributes(element,  ["sql", "params"]) &&
+        typeof element.sql === "string" &&
+        typeof element.params === "object";
     }
 
 }

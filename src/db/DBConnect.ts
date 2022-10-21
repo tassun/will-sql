@@ -19,12 +19,26 @@ export abstract class DBConnect implements DBConnector {
         //do nothing
     }
 
-    public async executeQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected async doExecuteQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
         return Promise.reject(null);
     }
 
-    public async executeUpdate(sql: string| SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected async doExecuteUpdate(sql: string| SQLOptions, params?: DBParam) : Promise<ResultSet> {
         return Promise.reject(null);
+    }
+
+    public async executeQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+        if(DBUtils.isSQLInterface(sql)) {
+            return this.execQuery(sql as SQLInterface);
+        }
+        return this.doExecuteQuery(sql, params);
+    }
+
+    public async executeUpdate(sql: string| SQLOptions, params?: DBParam) : Promise<ResultSet> {
+        if(DBUtils.isSQLInterface(sql)) {
+            return this.execUpdate(sql as SQLInterface);
+        }
+        return this.doExecuteUpdate(sql, params);
     }
 
     public async execQuery(sql: SQLInterface) : Promise<ResultSet> {

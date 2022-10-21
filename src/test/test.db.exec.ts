@@ -1,6 +1,17 @@
 import { DBConnections } from "../db/DBConnections";
 import { KnSQL } from "../db/KnSQL";
 
+async function testexecute() {
+    let knsql = new KnSQL();
+    knsql.append("select * from testdbx where share = ?share ");
+    knsql.set("share","BBL");
+    const db = DBConnections.getDBConnector("MYSQL");
+    console.log("db",db);
+    let rs = await db.executeQuery(knsql);
+    console.log("rs",rs);
+    db.close();
+}
+
 async function testdb() {
     let knsql = new KnSQL();
     knsql.append("select * from testdbx where share = ?share ");
@@ -27,6 +38,7 @@ async function testupdate() {
 }
 
 async function test() {
+    await testexecute();
     await testdb();
     await testupdate();
 }

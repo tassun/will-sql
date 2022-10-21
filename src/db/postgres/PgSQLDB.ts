@@ -29,12 +29,12 @@ class PgSQLDB extends DBConnect {
         this.connection = undefined;
     }
 
-    public override async executeQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
         await this.initConnection();
         return await PgSQLDBQuery.executeQuery(this.connection as PoolClient,sql, params);
     }        
 
-    public async executeUpdate(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteUpdate(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
         await this.initConnection();
         return await PgSQLDBQuery.executeUpdate(this.connection as PoolClient,sql, params);
     }

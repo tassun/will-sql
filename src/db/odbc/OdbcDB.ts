@@ -28,12 +28,12 @@ class OdbcDB extends DBConnect {
         this.connection = undefined;
     }
 
-    public override async executeQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
         await this.initConnection();
         return await OdbcDBQuery.executeQuery(this.connection,sql, params);
     }        
 
-    public async executeUpdate(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteUpdate(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
         await this.initConnection();
         return await OdbcDBQuery.executeUpdate(this.connection,sql, params);
     }
