@@ -55,9 +55,32 @@ interface DBConnector {
     close(): void;
     end(): void;
 }
+interface PageOffset {
+    /**
+     * Total records
+     */
+    total: number;
+    /**
+     * Limit of result set
+     */
+    limit: number;
+    /**
+     * Page number
+     */
+    page: number;
+    /**
+     * Offset to skip result set
+     */
+    offset: number;
+    /**
+     * Records per page
+     */
+    chapter: number;
+}
 interface ResultSet {
     rows: any;
     columns: any;
+    offsets?: PageOffset;
 }
 interface SQLOptions {
     sql: string;
@@ -74,7 +97,7 @@ interface SQLInterface {
     executeUpdate(db: DBConnector): Promise<ResultSet>;
     getSQLOptions(db: DBConnector): [SQLOptions, DBParam];
 }
-export { DBAlias, DBDialect, DBTypes, DBValue, DBParam, DBParamValue, DBConnector, ResultSet, SQLOptions, SQLInterface };
+export { DBAlias, DBDialect, DBTypes, DBValue, DBParam, DBParamValue, DBConnector, PageOffset, ResultSet, SQLOptions, SQLInterface };
 
 export interface DBConfig {
     schema: string;

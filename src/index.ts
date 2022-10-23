@@ -5,7 +5,8 @@ export {
     DBValue,
     DBParam,
     DBParamValue,
-    DBConnector,    
+    DBConnector, 
+    PageOffset,   
     ResultSet,
     SQLOptions,
     SQLInterface

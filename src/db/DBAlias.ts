@@ -49,9 +49,33 @@ interface DBConnector {
     end() : void;
 }
 
+interface PageOffset {
+    /**
+     * Total records
+     */
+    total: number;
+    /**
+     * Limit of result set
+     */
+    limit: number;
+    /**
+     * Page number
+     */
+    page: number;
+    /**
+     * Offset to skip result set
+     */
+    offset: number;
+    /**
+     * Records per page
+     */
+    chapter: number;
+}
+
 interface ResultSet {
     rows: any;
     columns: any;
+    offsets?: PageOffset;
 }
 
 interface SQLOptions {
@@ -80,7 +104,8 @@ export {
     DBValue,
     DBParam,
     DBParamValue,
-    DBConnector,    
+    DBConnector, 
+    PageOffset,   
     ResultSet,
     SQLOptions,
     SQLInterface
