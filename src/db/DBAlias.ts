@@ -4,22 +4,16 @@ enum DBAlias {
     MYSQL = "MYSQL", MSSQL = "MSSQL", ODBC = "ODBC", ORACLE = "ORACLE", POSTGRES = "POSTGRES" 
 }
 
+enum DBDialect {
+    MYSQL = "mysql", MSSQL = "mssql", ORACLE = "oracle", POSTGRES = "postgres", INFORMIX = "informix", DB2 = "db2"
+}
+
 enum DBTypes {
     STRING = "STRING", INTEGER = "INTEGER", DECIMAL = "DECIMAL", BOOLEAN = "BOOLEAN", BIGINT = "BIGINT", 
     TEXT = "TEXT", DATE = "DATE", TIME = "TIME", DATETIME = "DATETIME", BLOB = "BLOB", CLOB = "CLOB"
 }
 
 type EnumDBTypes = keyof typeof DBTypes;
-
-interface ResultSet {
-    rows: any;
-    columns: any;
-}
-
-interface SQLOptions {
-    sql: string,
-    options?: any;
-}
 
 interface DBValue {
     value: (string | number | boolean | bigint | null | undefined | Date | Buffer),
@@ -55,6 +49,16 @@ interface DBConnector {
     end() : void;
 }
 
+interface ResultSet {
+    rows: any;
+    columns: any;
+}
+
+interface SQLOptions {
+    sql: string,
+    options?: any;
+}
+
 interface SQLInterface {
     params : Map<string,DBValue>;
     clear() : void;
@@ -62,7 +66,7 @@ interface SQLInterface {
     append(sql: string) : SQLInterface;
     set(paramname: string, 
         paramvalue: (string | number | boolean | bigint | null | undefined | Date | Buffer | DBParamValue), 
-        paramtype: (DBTypes | EnumDBTypes)) : SQLInterface;
+        paramtype?: (DBTypes | EnumDBTypes)) : SQLInterface;
     param(name: string) : DBValue;
     executeQuery(db: DBConnector) : Promise<ResultSet>;
     executeUpdate(db: DBConnector) : Promise<ResultSet>;
@@ -71,12 +75,13 @@ interface SQLInterface {
 
 export {
     DBAlias,
-    ResultSet,
+    DBDialect,
+    DBTypes,
     DBValue,
     DBParam,
     DBParamValue,
-    DBTypes,
+    DBConnector,    
+    ResultSet,
     SQLOptions,
-    SQLInterface,
-    DBConnector    
+    SQLInterface
 }

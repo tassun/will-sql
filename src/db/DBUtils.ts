@@ -1,5 +1,6 @@
 import { Utilities } from "../utils/Utilities";
-import { DBAlias, DBTypes, SQLOptions, DBParam, SQLInterface } from "./DBAlias";
+import { DBAlias, DBDialect, DBTypes, SQLOptions, DBParam, SQLInterface } from "./DBAlias";
+import { DBError } from "./DBError";
 
 export class DBUtils {
     public static parseDBTypes(type:string | DBTypes) : DBTypes {
@@ -27,9 +28,23 @@ export class DBUtils {
             if(Utilities.equalsIgnoreCase("ODBC",alias)) return DBAlias.ODBC;
             if(Utilities.equalsIgnoreCase("ORACLE",alias)) return DBAlias.ORACLE;
             if(Utilities.equalsIgnoreCase("POSTGRES",alias)) return DBAlias.POSTGRES;
-            return DBAlias.MYSQL;
+            throw new DBError("Unknown alias '"+alias+"'",-10201);
         } else {
             return alias;
+        }
+    }
+
+    public static parseDBDialect(dialect: (string | DBDialect)) : DBDialect {
+        if(typeof dialect === "string") {
+            if(Utilities.equalsIgnoreCase("mysql",dialect)) return DBDialect.MYSQL;
+            if(Utilities.equalsIgnoreCase("mssql",dialect)) return DBDialect.MSSQL;
+            if(Utilities.equalsIgnoreCase("oracle",dialect)) return DBDialect.ORACLE;
+            if(Utilities.equalsIgnoreCase("postgres",dialect)) return DBDialect.POSTGRES;
+            if(Utilities.equalsIgnoreCase("informix",dialect)) return DBDialect.INFORMIX;
+            if(Utilities.equalsIgnoreCase("db2",dialect)) return DBDialect.DB2;
+            throw new DBError("Unknown dialect '"+dialect+"'",-10202);
+        } else {
+            return dialect;
         }
     }
 

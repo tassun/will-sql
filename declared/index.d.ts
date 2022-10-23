@@ -5,6 +5,14 @@ declare enum DBAlias {
     ORACLE = "ORACLE",
     POSTGRES = "POSTGRES"
 }
+declare enum DBDialect {
+    MYSQL = "mysql",
+    MSSQL = "mssql",
+    ORACLE = "oracle",
+    POSTGRES = "postgres",
+    INFORMIX = "informix",
+    DB2 = "db2"
+}
 declare enum DBTypes {
     STRING = "STRING",
     INTEGER = "INTEGER",
@@ -19,14 +27,6 @@ declare enum DBTypes {
     CLOB = "CLOB"
 }
 declare type EnumDBTypes = keyof typeof DBTypes;
-interface ResultSet {
-    rows: any;
-    columns: any;
-}
-interface SQLOptions {
-    sql: string;
-    options?: any;
-}
 interface DBValue {
     value: (string | number | boolean | bigint | null | undefined | Date | Buffer);
     type: (DBTypes | EnumDBTypes);
@@ -55,18 +55,26 @@ interface DBConnector {
     close(): void;
     end(): void;
 }
+interface ResultSet {
+    rows: any;
+    columns: any;
+}
+interface SQLOptions {
+    sql: string;
+    options?: any;
+}
 interface SQLInterface {
     params: Map<string, DBValue>;
     clear(): void;
     clearParameter(): void;
     append(sql: string): SQLInterface;
-    set(paramname: string, paramvalue: (string | number | boolean | bigint | null | undefined | Date | Buffer | DBParamValue), paramtype: (DBTypes | EnumDBTypes)): SQLInterface;
+    set(paramname: string, paramvalue: (string | number | boolean | bigint | null | undefined | Date | Buffer | DBParamValue), paramtype?: (DBTypes | EnumDBTypes)): SQLInterface;
     param(name: string): DBValue;
     executeQuery(db: DBConnector): Promise<ResultSet>;
     executeUpdate(db: DBConnector): Promise<ResultSet>;
     getSQLOptions(db: DBConnector): [SQLOptions, DBParam];
 }
-export { DBAlias, ResultSet, DBValue, DBParam, DBParamValue, DBTypes, SQLOptions, SQLInterface, DBConnector };
+export { DBAlias, DBDialect, DBTypes, DBValue, DBParam, DBParamValue, DBConnector, ResultSet, SQLOptions, SQLInterface };
 
 export interface DBConfig {
     schema: string;
@@ -87,6 +95,7 @@ export declare class DBError extends Error {
 export declare class DBUtils {
     static parseDBTypes(type: string | DBTypes): DBTypes;
     static parseDBAlias(alias: (string | DBAlias)): DBAlias;
+    static parseDBDialect(dialect: (string | DBDialect)): DBDialect;
     static parseSQLOptions(query: string | SQLOptions): SQLOptions | undefined;
     static getQuery(query: string | SQLOptions): string;
     static extractDBParam(params?: DBParam): [any, string[], string[]];

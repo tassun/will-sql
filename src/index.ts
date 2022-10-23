@@ -1,13 +1,14 @@
 export {     
     DBAlias,
-    ResultSet,
+    DBDialect,
+    DBTypes,
     DBValue,
     DBParam,
     DBParamValue,
-    DBTypes,
+    DBConnector,    
+    ResultSet,
     SQLOptions,
-    SQLInterface,
-    DBConnector    
+    SQLInterface
  } from "./db/DBAlias";
 export { DBConfig, dbconfig } from "./db/DBConfig";
 export { DBError } from "./db/DBError";
