@@ -53,7 +53,7 @@ interface PageOffset {
     /**
      * Total records
      */
-    total: number;
+    totalRows: number;
     /**
      * Limit of result set
      */
@@ -69,7 +69,11 @@ interface PageOffset {
     /**
      * Records per page
      */
-    chapter: number;
+    rowsPerPage: number;
+    /**
+     * Total pages
+     */
+    totalPages: number;
 }
 
 interface ResultSet {

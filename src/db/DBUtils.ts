@@ -1,5 +1,6 @@
 import { Utilities } from "../utils/Utilities";
-import { DBAlias, DBDialect, DBTypes, SQLOptions, DBParam, SQLInterface } from "./DBAlias";
+import { DBAlias, DBDialect, DBTypes, DBParam, SQLOptions, SQLInterface } from "./DBAlias";
+import { DBConfig } from "./DBConfig";
 import { DBError } from "./DBError";
 
 export class DBUtils {
@@ -83,6 +84,25 @@ export class DBUtils {
         return Utilities.hasAttributes(element,  ["sql", "params"]) &&
         typeof element.sql === "string" &&
         typeof element.params === "object";
+    }
+
+    public static isMYSQL(config: DBConfig) : boolean {
+        return this.parseDBDialect(config.dialect)==DBDialect.MYSQL;
+    }
+    public static isDB2(config: DBConfig) : boolean {
+        return this.parseDBDialect(config.dialect)==DBDialect.DB2;
+    }
+    public static isMSSQL(config: DBConfig) : boolean {
+        return this.parseDBDialect(config.dialect)==DBDialect.MSSQL;
+    }
+    public static isINFORMIX(config: DBConfig) : boolean {
+        return this.parseDBDialect(config.dialect)==DBDialect.INFORMIX;
+    }
+    public static isORACLE(config: DBConfig) : boolean {
+        return this.parseDBDialect(config.dialect)==DBDialect.ORACLE;
+    }
+    public static isPOSTGRES(config: DBConfig) : boolean {
+        return this.parseDBDialect(config.dialect)==DBDialect.POSTGRES;
     }
 
 }

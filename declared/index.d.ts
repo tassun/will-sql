@@ -59,7 +59,7 @@ interface PageOffset {
     /**
      * Total records
      */
-    total: number;
+    totalRows: number;
     /**
      * Limit of result set
      */
@@ -75,7 +75,11 @@ interface PageOffset {
     /**
      * Records per page
      */
-    chapter: number;
+    rowsPerPage: number;
+    /**
+     * Total pages
+     */
+    totalPages: number;
 }
 interface ResultSet {
     rows: any;
@@ -123,6 +127,12 @@ export declare class DBUtils {
     static getQuery(query: string | SQLOptions): string;
     static extractDBParam(params?: DBParam): [any, string[], string[]];
     static isSQLInterface(element: unknown): element is SQLInterface;
+    static isMYSQL(config: DBConfig): boolean;
+    static isDB2(config: DBConfig): boolean;
+    static isMSSQL(config: DBConfig): boolean;
+    static isINFORMIX(config: DBConfig): boolean;
+    static isORACLE(config: DBConfig): boolean;
+    static isPOSTGRES(config: DBConfig): boolean;
 }
 
 declare type EnumDBAlias = keyof typeof DBAlias;
