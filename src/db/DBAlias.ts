@@ -51,29 +51,29 @@ interface DBConnector {
 
 interface PageOffset {
     /**
+     * Page number
+     */
+     page: number;
+    /**
+     * Number of records per page
+     */
+     rowsPerPage: number;
+     /**
      * Total records
      */
     totalRows: number;
     /**
-     * Limit of result set
-     */
-    limit: number;
-    /**
-     * Page number
-     */
-    page: number;
-    /**
-     * Offset to skip result set
-     */
-    offset: number;
-    /**
-     * Records per page
-     */
-    rowsPerPage: number;
-    /**
      * Total pages
      */
     totalPages: number;
+    /**
+     * Limit of result set
+     */
+     limit: number;
+     /**
+      * Offset to skip result set
+      */
+     offset: number;
 }
 
 interface ResultSet {
