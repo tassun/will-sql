@@ -1,6 +1,6 @@
 import config from 'config';
-import { DB_SCHEMA, DB_URL, DB_ALIAS, DB_DIALECT, DB_USER, DB_PASSWORD } from "../utils/EnvironmentVariable";
-import { Utilities } from "../utils/Utilities";
+import { Utilities } from "will-util";
+import { DB_SCHEMA, DB_URL, DB_ALIAS, DB_DIALECT, DB_USER, DB_PASSWORD } from "./DBVariable";
 import { DBError } from './DBError';
 import { DBConnector } from "./DBAlias";
 import { DBConfig, dbconfig } from "./DBConfig";

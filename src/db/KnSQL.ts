@@ -1,4 +1,4 @@
-import { StringTokenizer } from "../utils/StringTokenizer";
+import { StringTokenizer } from "will-util";
 import { DBConnector, DBAlias, DBTypes, DBParam, DBValue, DBParamValue, ResultSet, SQLOptions, SQLInterface } from "./DBAlias";
 import { DBUtils } from "./DBUtils";
 import { DBError } from "./DBError";

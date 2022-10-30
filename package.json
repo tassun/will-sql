@@ -1,6 +1,6 @@
 {
   "name": "will-sql",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "SQL by place holder parameter naming and value setting for execute statement on databases",
   "main": "index.js",
   "scripts": {
@@ -44,7 +44,8 @@
     "mysql": "^2.18.1",
     "odbc": "^2.4.6",
     "oracledb": "^5.5.0",
-    "pg": "^8.8.0"
+    "pg": "^8.8.0",
+    "will-util": "^1.0.0"
   },
   "devDependencies": {
     "@types/config": "^3.3.0",

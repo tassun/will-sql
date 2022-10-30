@@ -17,6 +17,3 @@ export { DBUtils } from "./db/DBUtils";
 export { DBConnect } from "./db/DBConnect";
 export { DBConnections, getDBConnector } from "./db/DBConnections";
 export { KnSQL } from "./db/KnSQL";
-export { Iterator } from "./utils/Iterator";
-export { StringTokenizer } from "./utils/StringTokenizer";
-export { Utilities } from "./utils/Utilities";

@@ -1,4 +1,4 @@
-import { Utilities } from "../utils/Utilities";
+import { Utilities } from "will-util";
 import { DBAlias, DBDialect, DBTypes, DBParam, SQLOptions, SQLInterface } from "./DBAlias";
 import { DBConfig } from "./DBConfig";
 import { DBError } from "./DBError";
