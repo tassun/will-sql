@@ -10,7 +10,7 @@ SQL by place holder parameter naming and value setting for execute statement on 
 
 ### Configuration
 
-This module require configuration([config](https://www.npmjs.com/package/config)) setting by config/default.json under project
+This module require configuration([config](https://www.npmjs.com/package/config)) setting by config/default.json under project and [will-util](https://www.npmjs.com/package/will-util)
 
     npm install config
 
@@ -24,6 +24,7 @@ This module require configuration([config](https://www.npmjs.com/package/config)
     "INFORMIX": { "alias": "odbc", "dialect": "informix", "url": "DRIVER={IBM INFORMIX ODBC DRIVER (64-bit)};SERVER=online_localhost;DATABASE=refdb;HOST=localhost;SERVICE=9088;UID=user;PWD=password;CLIENT_LOCALE=th_th.thai620;DB_LOCALE=th_th.thai620;", "user": "user", "password":"password" }
 }
 ```
+    npm install will-util
 
 ### Queries
 Since [mysql](https://www.npmjs.com/package/mysql), [mssql](https://www.npmjs.com/package/mssql), [odbc](https://www.npmjs.com/package/odbc), [oracle](https://www.npmjs.com/package/oracledb), [postgres](https://www.npmjs.com/package/pg) node module using difference place holder for parameter
