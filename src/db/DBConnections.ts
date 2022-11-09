@@ -1,4 +1,4 @@
-import config from 'config';
+import config from "will-util";
 import { Utilities } from "will-util";
 import { DB_SCHEMA, DB_URL, DB_ALIAS, DB_DIALECT, DB_USER, DB_PASSWORD } from "./DBVariable";
 import { DBError } from './DBError';

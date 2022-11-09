@@ -29,10 +29,14 @@ async function testupdate() {
     knsql.set("percent",60);
     knsql.set("mktid","TSO");
     const db = DBConnections.getDBConnector("MYSQL");
-    await db.beginWork();
-    let rs = await db.execUpdate(knsql);
-    console.log("update",rs);
-    await db.commitWork();
+    try {
+        await db.beginWork();
+        let rs = await db.execUpdate(knsql);
+        console.log("update",rs);
+        await db.commitWork();
+    } catch(ex) {
+        await db.rollbackWork();
+    }
     db.close();
     db.end();
 }
