@@ -7,7 +7,6 @@ import { DBConfig, dbconfig } from "./DBConfig";
 
 export class DBConnections {
     public static getDBConnector(configure: (string | DBConfig) = {schema: DB_SCHEMA, alias: DB_ALIAS, dialect: DB_DIALECT, url: DB_URL, user: DB_USER, password: DB_PASSWORD}) : DBConnector {
-        console.log("DB_URL",DB_URL);
         //console.log("config",config);
         if(typeof configure === "string") {
             if(config.has(configure)) {
