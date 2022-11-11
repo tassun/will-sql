@@ -1,6 +1,7 @@
-export const DB_SCHEMA = process.env.DB_SCHEMA = "TESTDB";
-export const DB_URL = process.env.DB_URL || "mysql://root:root@localhost:3306/testdb?charset=utf8&connectionLimit=10";
-export const DB_ALIAS = process.env.DB_ALIAS || "mysql";
-export const DB_DIALECT = process.env.DB_DIALECT || "mysql";
-export const DB_USER = process.env.DB_USER || "";
-export const DB_PASSWORD = process.env.DB_PASSWORD || "";
+import config from "will-util";
+export const DB_SCHEMA = config.env("DB_SCHEMA","TESTDB");
+export const DB_URL = config.env("DB_URL","");
+export const DB_ALIAS = config.env("DB_ALIAS","mysql");
+export const DB_DIALECT = config.env("DB_DIALECT","mysql");
+export const DB_USER = config.env("DB_USER","");
+export const DB_PASSWORD = config.env("DB_PASSWORD","");
