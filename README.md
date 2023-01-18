@@ -21,7 +21,8 @@ This module require configuration([config](https://www.npmjs.com/package/config)
     "MSSQL": { "alias": "mssql", "dialect": "mssql", "url": "Server=localhost,1433;Database=testdb;User Id=user;Password=password;Encrypt=false;Trusted_Connection=Yes;", "user": "user", "password": "password" },
     "ORACLE": { "alias": "oracle", "dialect": "oracle", "url": "localhost:1521/ORCLCDB.localdomain", "user": "user", "password": "password" },
     "POSTGRES": { "alias": "postgres", "dialect": "postgres", "url": "postgresql://user:password@localhost:5432/testdb", "user": "user", "password": "password" },
-    "INFORMIX": { "alias": "odbc", "dialect": "informix", "url": "DRIVER={IBM INFORMIX ODBC DRIVER (64-bit)};SERVER=online_localhost;DATABASE=refdb;HOST=localhost;SERVICE=9088;UID=user;PWD=password;CLIENT_LOCALE=th_th.thai620;DB_LOCALE=th_th.thai620;", "user": "user", "password":"password" }
+    "INFORMIX": { "alias": "odbc", "dialect": "informix", "url": "DRIVER={IBM INFORMIX ODBC DRIVER (64-bit)};SERVER=online_localhost;DATABASE=refdb;HOST=localhost;SERVICE=9088;UID=user;PWD=password;CLIENT_LOCALE=th_th.thai620;DB_LOCALE=th_th.thai620;", "user": "user", "password":"password" },
+    "SQLITE" : { "alias": "sqlite", "dialect": "sqlite", "url": ":memory:", "user": "", "password": "" }
 }
 ```
     npm install will-util
@@ -191,6 +192,30 @@ async function testdb() {
         percentage: {value: 50, type: "DECIMAL"} 
     });
     console.log("rs",rs);
+    db.close();
+}
+```
+#### sqlite
+
+    npm install sqlite3
+
+```typescript
+import { DBConnections } from "will-sql";
+
+async function testdb() {
+    const db = DBConnections.getDBConnector("SQLITE");
+
+    await db.executeUpdate("create table testdbx(share text, mktid text, yield numeric, percent numeric)");
+    await db.executeUpdate("insert into testdbx(share,mktid,yield,percent) values('BBL','TEST',100.50,25.50)");
+    await db.executeUpdate("insert into testdbx(share,mktid,yield,percent) values('SCB','TEST',200.50,55.50)");
+
+    let rs = await db.executeQuery("select * from testdbx");
+    console.log("rs",rs);
+
+    rs = await db.executeQuery("select * from testdbx where percent > ? ",{ 
+        percent: {value: 50, type: "DECIMAL"} 
+    });
+    console.log("rs2",rs);
     db.close();
 }
 ```

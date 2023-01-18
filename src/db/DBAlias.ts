@@ -1,11 +1,11 @@
 import { DBConfig } from "./DBConfig";
 
 enum DBAlias {
-    MYSQL = "MYSQL", MSSQL = "MSSQL", ODBC = "ODBC", ORACLE = "ORACLE", POSTGRES = "POSTGRES" 
+    MYSQL = "MYSQL", MSSQL = "MSSQL", ODBC = "ODBC", ORACLE = "ORACLE", POSTGRES = "POSTGRES", SQLITE = "SQLITE" 
 }
 
 enum DBDialect {
-    MYSQL = "mysql", MSSQL = "mssql", ORACLE = "oracle", POSTGRES = "postgres", INFORMIX = "informix", DB2 = "db2"
+    MYSQL = "mysql", MSSQL = "mssql", ORACLE = "oracle", POSTGRES = "postgres", INFORMIX = "informix", DB2 = "db2", SQLITE = "sqlite"
 }
 
 enum DBTypes {

@@ -3,7 +3,8 @@ declare enum DBAlias {
     MSSQL = "MSSQL",
     ODBC = "ODBC",
     ORACLE = "ORACLE",
-    POSTGRES = "POSTGRES"
+    POSTGRES = "POSTGRES",
+    SQLITE = "SQLITE"
 }
 declare enum DBDialect {
     MYSQL = "mysql",
@@ -11,7 +12,8 @@ declare enum DBDialect {
     ORACLE = "oracle",
     POSTGRES = "postgres",
     INFORMIX = "informix",
-    DB2 = "db2"
+    DB2 = "db2",
+    SQLITE = "sqlite"
 }
 declare enum DBTypes {
     STRING = "STRING",

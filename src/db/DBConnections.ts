@@ -51,6 +51,10 @@ export class DBConnections {
             const PgSQLDB = require("./postgres/PgSQLDB");
             return new PgSQLDB({...dbconfig});
         }
+        if(Utilities.equalsIgnoreCase(dbconfig.alias,"SQLITE")) {
+            const SQLiteDB = require("./sqlite/SQLiteDB");
+            return new SQLiteDB({...dbconfig});
+        }
         throw new DBError("Database alias '"+dbconfig.alias+"' not supported",-10002);
     }
 }

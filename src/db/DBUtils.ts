@@ -29,6 +29,7 @@ export class DBUtils {
             if(Utilities.equalsIgnoreCase("ODBC",alias)) return DBAlias.ODBC;
             if(Utilities.equalsIgnoreCase("ORACLE",alias)) return DBAlias.ORACLE;
             if(Utilities.equalsIgnoreCase("POSTGRES",alias)) return DBAlias.POSTGRES;
+            if(Utilities.equalsIgnoreCase("SQLITE",alias)) return DBAlias.SQLITE;
             throw new DBError("Unknown alias '"+alias+"'",-10201);
         } else {
             return alias;
@@ -43,6 +44,7 @@ export class DBUtils {
             if(Utilities.equalsIgnoreCase("postgres",dialect)) return DBDialect.POSTGRES;
             if(Utilities.equalsIgnoreCase("informix",dialect)) return DBDialect.INFORMIX;
             if(Utilities.equalsIgnoreCase("db2",dialect)) return DBDialect.DB2;
+            if(Utilities.equalsIgnoreCase("sqlite",dialect)) return DBDialect.SQLITE;
             throw new DBError("Unknown dialect '"+dialect+"'",-10202);
         } else {
             return dialect;
@@ -104,5 +106,7 @@ export class DBUtils {
     public static isPOSTGRES(config: DBConfig) : boolean {
         return this.parseDBDialect(config.dialect)==DBDialect.POSTGRES;
     }
-
+    public static isSQLITE(config: DBConfig) : boolean {
+        return this.parseDBDialect(config.dialect)==DBDialect.SQLITE;
+    }
 }
