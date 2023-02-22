@@ -25,6 +25,7 @@ export class DBUtils {
     public static parseDBAlias(alias: (string | DBAlias)) : DBAlias {
         if(typeof alias === "string") {
             if(Utilities.equalsIgnoreCase("MYSQL",alias)) return DBAlias.MYSQL;
+            if(Utilities.equalsIgnoreCase("MYSQL2",alias)) return DBAlias.MYSQL2;
             if(Utilities.equalsIgnoreCase("MSSQL",alias)) return DBAlias.MSSQL;
             if(Utilities.equalsIgnoreCase("ODBC",alias)) return DBAlias.ODBC;
             if(Utilities.equalsIgnoreCase("ORACLE",alias)) return DBAlias.ORACLE;

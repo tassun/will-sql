@@ -1,6 +1,6 @@
 {
   "name": "will-sql",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "SQL by place holder parameter naming and value setting for execute statement on databases",
   "main": "index.js",
   "scripts": {
@@ -12,12 +12,14 @@
     "db:pg": "ts-node-dev src/test/test.db.postgres.ts",
     "db:exec": "ts-node-dev src/test/test.db.exec.ts",
     "db:sqlite": "ts-node-dev src/test/test.db.sqlite.ts",
+    "db:mysql2": "ts-node-dev src/test/test.db.mysql2.ts",
     "kn:mysql": "ts-node-dev src/test/test.kn.mysql.ts",
     "kn:mssql": "ts-node-dev src/test/test.kn.mssql.ts",
     "kn:odbc": "ts-node-dev src/test/test.kn.odbc.ts",
     "kn:oracle": "ts-node-dev src/test/test.kn.oracle.ts",
     "kn:pg": "ts-node-dev src/test/test.kn.postgres.ts",
     "kn:sqlite": "ts-node-dev src/test/test.kn.sqlite.ts",
+    "kn:mysql2": "ts-node-dev src/test/test.kn.mysql2.ts",
     "test": "jest",
     "test:cover": "jest --coverage"
   },
@@ -44,6 +46,7 @@
     "config": "^3.3.8",
     "mssql": "^9.0.1",
     "mysql": "^2.18.1",
+    "mysql2": "^3.1.2",
     "odbc": "^2.4.6",
     "oracledb": "^5.5.0",
     "pg": "^8.8.0",

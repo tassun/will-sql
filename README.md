@@ -22,7 +22,8 @@ This module require configuration([config](https://www.npmjs.com/package/config)
     "ORACLE": { "alias": "oracle", "dialect": "oracle", "url": "localhost:1521/ORCLCDB.localdomain", "user": "user", "password": "password" },
     "POSTGRES": { "alias": "postgres", "dialect": "postgres", "url": "postgresql://user:password@localhost:5432/testdb", "user": "user", "password": "password" },
     "INFORMIX": { "alias": "odbc", "dialect": "informix", "url": "DRIVER={IBM INFORMIX ODBC DRIVER (64-bit)};SERVER=online_localhost;DATABASE=refdb;HOST=localhost;SERVICE=9088;UID=user;PWD=password;CLIENT_LOCALE=th_th.thai620;DB_LOCALE=th_th.thai620;", "user": "user", "password":"password" },
-    "SQLITE" : { "alias": "sqlite", "dialect": "sqlite", "url": ":memory:", "user": "", "password": "" }
+    "SQLITE" : { "alias": "sqlite", "dialect": "sqlite", "url": ":memory:", "user": "", "password": "" },
+    "MYSQL2" : { "alias": "mysql2", "dialect": "mysql", "url": "", "user": "user", "password": "password", "host": "localhost", "port": 3306, "database": "testdb", "options": { "charset": "utf8", "connectionLimit": 10 } },
 }
 ```
     npm install will-util
@@ -123,6 +124,22 @@ import { DBConnections } from "will-sql";
 
 async function testdb() {
     const db = DBConnections.getDBConnector("MYSQL");
+    let rs = await db.executeQuery("select * from testdbx where percent > ? ",{ 
+        percent: {value: 50, type: "DECIMAL"} 
+    });
+    console.log("rs",rs);
+    db.close();
+}
+```
+#### mysql2
+
+    npm install mysql2
+
+```typescript
+import { DBConnections } from "will-sql";
+
+async function testdb() {
+    const db = DBConnections.getDBConnector("MYSQL2");
     let rs = await db.executeQuery("select * from testdbx where percent > ? ",{ 
         percent: {value: 50, type: "DECIMAL"} 
     });

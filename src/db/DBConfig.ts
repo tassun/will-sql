@@ -5,6 +5,9 @@ export interface DBConfig {
     url: string;
     user: string;
     password: string;
+    host?: string;
+    port?: number;
+    database?: string;
     options?: any;
 }
 

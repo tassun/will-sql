@@ -4,7 +4,8 @@ declare enum DBAlias {
     ODBC = "ODBC",
     ORACLE = "ORACLE",
     POSTGRES = "POSTGRES",
-    SQLITE = "SQLITE"
+    SQLITE = "SQLITE",
+    MYSQL2 = "MYSQL2"
 }
 declare enum DBDialect {
     MYSQL = "mysql",
@@ -112,13 +113,23 @@ export interface DBConfig {
     url: string;
     user: string;
     password: string;
+    host?: string;
+    port?: number;
+    database?: string;
     options?: any;
 }
 export declare const dbconfig: DBConfig;
 
 export declare class DBError extends Error {
-    readonly state: number;
-    constructor(message: string, state: number);
+    /**
+     * this is error code
+     */
+    readonly code: number;
+    /**
+     * this is error state
+     */
+    readonly state?: string;
+    constructor(message: string, code: number, state?: string);
 }
 
 export declare class DBUtils {
@@ -135,6 +146,7 @@ export declare class DBUtils {
     static isINFORMIX(config: DBConfig): boolean;
     static isORACLE(config: DBConfig): boolean;
     static isPOSTGRES(config: DBConfig): boolean;
+    static isSQLITE(config: DBConfig): boolean;
 }
 
 declare type EnumDBAlias = keyof typeof DBAlias;

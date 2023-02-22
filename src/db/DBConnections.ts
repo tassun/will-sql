@@ -17,6 +17,9 @@ export class DBConnections {
                 dbconfig.url = section["url"];
                 dbconfig.user = section["user"];
                 dbconfig.password = section["password"];
+                dbconfig.host = section["host"];
+                dbconfig.port = section["port"];
+                dbconfig.database = section["database"];
                 dbconfig.options = section["options"];
             } else {
                 throw new DBError("Database configuration '"+configure+"' not found",-10001);
@@ -33,6 +36,10 @@ export class DBConnections {
         //console.log("dbconfig",dbconfig);
         if(Utilities.equalsIgnoreCase(dbconfig.alias,"MYSQL")) {
             const MySQLDB = require("./mysql/MySQLDB");
+            return new MySQLDB({...dbconfig});
+        }
+        if(Utilities.equalsIgnoreCase(dbconfig.alias,"MYSQL2")) {
+            const MySQLDB = require("./mysql2/MySQLDB");
             return new MySQLDB({...dbconfig});
         }
         if(Utilities.equalsIgnoreCase(dbconfig.alias,"ODBC")) {
