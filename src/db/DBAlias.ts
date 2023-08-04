@@ -82,6 +82,10 @@ interface ResultSet {
     offsets?: PageOffset;
 }
 
+interface RecordSet extends ResultSet {
+    records: number;
+}
+
 interface SQLOptions {
     sql: string,
     options?: any;
@@ -111,6 +115,7 @@ export {
     DBConnector, 
     PageOffset,   
     ResultSet,
+    RecordSet,
     SQLOptions,
     SQLInterface
 }

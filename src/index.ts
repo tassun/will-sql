@@ -8,6 +8,7 @@ export {
     DBConnector, 
     PageOffset,   
     ResultSet,
+    RecordSet,
     SQLOptions,
     SQLInterface
  } from "./db/DBAlias";

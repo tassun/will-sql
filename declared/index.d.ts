@@ -89,6 +89,9 @@ interface ResultSet {
     columns: any;
     offsets?: PageOffset;
 }
+interface RecordSet extends ResultSet {
+    records: number;
+}
 interface SQLOptions {
     sql: string;
     options?: any;
@@ -104,7 +107,7 @@ interface SQLInterface {
     executeUpdate(db: DBConnector): Promise<ResultSet>;
     getSQLOptions(db: DBConnector): [SQLOptions, DBParam];
 }
-export { DBAlias, DBDialect, DBTypes, DBValue, DBParam, DBParamValue, DBConnector, PageOffset, ResultSet, SQLOptions, SQLInterface };
+export { DBAlias, DBDialect, DBTypes, DBValue, DBParam, DBParamValue, DBConnector, PageOffset, ResultSet, RecordSet, SQLOptions, SQLInterface };
 
 export interface DBConfig {
     schema: string;
