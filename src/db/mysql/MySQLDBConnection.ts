@@ -42,7 +42,8 @@ export class MySQLDBConnection {
     public static releaseConnection(conn: Connection) {
         try {
             let pconn : PoolConnection = conn as PoolConnection;
-            pconn.release(); 
+            //pconn.release(); 
+            pconn.destroy();
         } catch(ex) { 
             console.error(ex);
         }
