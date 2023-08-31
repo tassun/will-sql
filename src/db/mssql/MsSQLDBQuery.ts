@@ -8,10 +8,11 @@ export class MsSQLDBQuery {
         if(params) {
             for(let p in params) {
                 let pv = params[p];
+                let paraValue = DBUtils.parseParamValue(pv);
                 try {
-                    conn.input(p,pv.value);
+                    conn.input(p,paraValue);
                 } catch(ex) {
-                    conn.parameters[p].value = pv.value;
+                    conn.parameters[p].value = paraValue;
                 }
             }
         }

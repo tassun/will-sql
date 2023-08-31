@@ -140,6 +140,7 @@ export declare class DBUtils {
     static parseDBAlias(alias: (string | DBAlias)): DBAlias;
     static parseDBDialect(dialect: (string | DBDialect)): DBDialect;
     static parseSQLOptions(query: string | SQLOptions): SQLOptions | undefined;
+    static parseParamValue(param: DBValue): any;
     static getQuery(query: string | SQLOptions): string;
     static extractDBParam(params?: DBParam): [any, string[], string[]];
     static isSQLInterface(element: unknown): element is SQLInterface;

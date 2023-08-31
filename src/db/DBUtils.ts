@@ -1,5 +1,5 @@
 import { Utilities } from "will-util";
-import { DBAlias, DBDialect, DBTypes, DBParam, SQLOptions, SQLInterface } from "./DBAlias";
+import { DBAlias, DBDialect, DBTypes, DBParam, DBValue, SQLOptions, SQLInterface } from "./DBAlias";
 import { DBConfig } from "./DBConfig";
 import { DBError } from "./DBError";
 
@@ -60,6 +60,16 @@ export class DBUtils {
         }
     }
 
+    public static parseParamValue(param: DBValue) : any {
+        let paramType = this.parseDBTypes(param.type);
+        if(paramType==DBTypes.DECIMAL || paramType==DBTypes.BIGINT || paramType==DBTypes.INTEGER) {
+            return Utilities.parseFloat(param.value);
+        } else if(paramType==DBTypes.DATE || paramType==DBTypes.DATETIME) {
+            return Utilities.parseDate(param.value);
+        }
+        return param.value;
+    }
+
     public static getQuery(query: string | SQLOptions) : string {
         if(typeof query === "string") {
             return query;
@@ -76,7 +86,7 @@ export class DBUtils {
             for(let p in params) {
                 let pv = params[p];
                 paranames.push(p);
-                paravalues.push(pv.value);
+                paravalues.push(this.parseParamValue(pv));
                 paratypes.push(pv.type);
             }
         }
