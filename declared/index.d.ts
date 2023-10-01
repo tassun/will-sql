@@ -103,8 +103,8 @@ interface SQLInterface {
     append(sql: string): SQLInterface;
     set(paramname: string, paramvalue: (string | number | boolean | bigint | null | undefined | Date | Buffer | DBParamValue), paramtype?: (DBTypes | EnumDBTypes)): SQLInterface;
     param(name: string): DBValue;
-    executeQuery(db: DBConnector): Promise<ResultSet>;
-    executeUpdate(db: DBConnector): Promise<ResultSet>;
+    executeQuery(db: DBConnector, ctx?: any): Promise<ResultSet>;
+    executeUpdate(db: DBConnector, ctx?: any): Promise<ResultSet>;
     getSQLOptions(db: DBConnector): [SQLOptions, DBParam];
 }
 export { DBAlias, DBDialect, DBTypes, DBValue, DBParam, DBParamValue, DBConnector, PageOffset, ResultSet, RecordSet, SQLOptions, SQLInterface };
@@ -194,6 +194,7 @@ export declare class KnSQL implements SQLInterface {
     parameters(names: string[]): any;
     getDBParam(names: string[]): DBParam;
     getSQLOptions(db: DBConnector): [SQLOptions, DBParam];
-    executeQuery(db: DBConnector): Promise<ResultSet>;
-    executeUpdate(db: DBConnector): Promise<ResultSet>;
+    executeQuery(db: DBConnector, ctx?: any): Promise<ResultSet>;
+    executeUpdate(db: DBConnector, ctx?: any): Promise<ResultSet>;
+    createSpan(db: DBConnector, ctx?: any): any;
 }

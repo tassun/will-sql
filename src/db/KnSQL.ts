@@ -110,12 +110,30 @@ export class KnSQL implements SQLInterface {
         let dbparam = this.getDBParam(paramnames);
         return [{ sql: sql, options: this.options }, dbparam];
     }
-    public async executeQuery(db: DBConnector) : Promise<ResultSet> {
-        let [sqlopts,dbparam] = this.getSQLOptions(db);
-        return db.executeQuery(sqlopts, dbparam);
+    public async executeQuery(db: DBConnector, ctx?: any) : Promise<ResultSet> {
+        let span = this.createSpan(db,ctx);
+        try {
+            let [sqlopts,dbparam] = this.getSQLOptions(db);
+            return db.executeQuery(sqlopts, dbparam);
+        } finally {
+            if(span) span.finish();
+        }
     }
-    public async executeUpdate(db: DBConnector) : Promise<ResultSet> {
-        let [sqlopts,dbparam] = this.getSQLOptions(db);
-        return db.executeUpdate(sqlopts, dbparam);
+    public async executeUpdate(db: DBConnector, ctx?: any) : Promise<ResultSet> {
+        let span = this.createSpan(db,ctx);
+        try {
+            let [sqlopts,dbparam] = this.getSQLOptions(db);
+            return db.executeUpdate(sqlopts, dbparam);
+        } finally {
+            if(span) span.finish();
+        }
+    }
+    public createSpan(db: DBConnector, ctx?: any) : any {
+        try {
+            if(ctx) {
+                return ctx.startSpan(db.constructor.name,{tags: {sql: this.sql, config: db.config}});
+            }
+        } catch(ex: any) { }
+        return undefined;
     }
 }

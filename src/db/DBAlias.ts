@@ -100,8 +100,8 @@ interface SQLInterface {
         paramvalue: (string | number | boolean | bigint | null | undefined | Date | Buffer | DBParamValue), 
         paramtype?: (DBTypes | EnumDBTypes)) : SQLInterface;
     param(name: string) : DBValue;
-    executeQuery(db: DBConnector) : Promise<ResultSet>;
-    executeUpdate(db: DBConnector) : Promise<ResultSet>;
+    executeQuery(db: DBConnector, ctx?: any) : Promise<ResultSet>;
+    executeUpdate(db: DBConnector, ctx?: any) : Promise<ResultSet>;
     getSQLOptions(db: DBConnector) : [SQLOptions, DBParam];
 }
 
