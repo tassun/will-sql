@@ -1,10 +1,10 @@
 import oracledb from 'oracledb';
 import { Pool, DBError } from 'oracledb';
-import { DBConfig } from "../DBConfig";
+import { KnDBConfig } from "../KnDBConfig";
 
 export class OraclePoolManager {
     public static pools = new Map<string,Pool>();
-    public static async getPool(dbcfg: DBConfig) : Promise<Pool> {
+    public static async getPool(dbcfg: KnDBConfig) : Promise<Pool> {
         let pool = this.pools.get(dbcfg.schema);
         if(!pool) {
             pool = await oracledb.createPool({

@@ -1,15 +1,15 @@
 import { Connection } from 'oracledb';
 import { OracleDBQuery } from "./OracleDBQuery";
 import { OracleDBConnection } from "./OracleDBConnection";
-import { DBParam, ResultSet, SQLOptions } from "../DBAlias";
-import { DBConnect } from "../DBConnect";
-import { DBConfig } from '../DBConfig';
+import { KnDBParam, KnResultSet, KnSQLOptions } from "../KnDBAlias";
+import { KnDBConnect } from "../KnDBConnect";
+import { KnDBConfig } from '../KnDBConfig';
 
-class OracleDB extends DBConnect {
+class OracleDB extends KnDBConnect {
     protected connector :  OracleDBConnection;
     public connection? : Connection;
 
-    constructor(config: DBConfig,connection?: Connection) {
+    constructor(config: KnDBConfig,connection?: Connection) {
         super("ORACLE","oracle",config);
         this.connector = new OracleDBConnection(config);
         this.connection = connection;
@@ -29,12 +29,12 @@ class OracleDB extends DBConnect {
         this.connection = undefined;
     }
 
-    protected override async doExecuteQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteQuery(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
         await this.initConnection();
         return await OracleDBQuery.executeQuery(this.connection as Connection,sql, params);
     }        
 
-    protected override async doExecuteUpdate(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteUpdate(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
         await this.initConnection();
         return await OracleDBQuery.executeUpdate(this.connection as Connection,sql, params);
     }

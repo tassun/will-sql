@@ -1,11 +1,11 @@
 import { Request, ConnectionPool, Transaction } from 'mssql';
-import { DBConfig } from "../DBConfig";
+import { KnDBConfig } from "../KnDBConfig";
 import { MsSQLPoolManager } from './MsSQLPoolManager';
 
 export class MsSQLDBConnection {
-    private config: DBConfig;
+    private config: KnDBConfig;
 
-    constructor(config: DBConfig) {
+    constructor(config: KnDBConfig) {
         this.config = config;
     }
 

@@ -1,9 +1,9 @@
-import { DBConfig } from "../DBConfig";
+import { KnDBConfig } from "../KnDBConfig";
 import { Database } from "sqlite3";
 
 export class SQLitePoolManager {
     public static pools = new Map<string,Database>();
-    public static getPool(dbcfg: DBConfig) : Database {
+    public static getPool(dbcfg: KnDBConfig) : Database {
         let db = this.pools.get(dbcfg.schema);
         if(!db) {
             db = new Database(dbcfg.url);

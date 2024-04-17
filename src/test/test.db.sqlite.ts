@@ -1,7 +1,7 @@
-import { DBConnections } from "../db/DBConnections";
+import { KnDBConnections } from "../db/KnDBConnections";
 
 async function testdb() {
-    const db = DBConnections.getDBConnector("SQLITE");
+    const db = KnDBConnections.getDBConnector("SQLITE");
     console.log("db",db);
     await db.executeUpdate("create table testdbx(share text, mktid text, yield numeric, percent numeric)");
     await db.executeUpdate("insert into testdbx(share,mktid,yield,percent) values('BBL','TEST',100.50,25.50)");
@@ -17,7 +17,7 @@ async function testdb() {
 }
 
 async function testupdate() {
-    const db = DBConnections.getDBConnector("SQLITE");
+    const db = KnDBConnections.getDBConnector("SQLITE");
     let rs = await db.executeQuery("select * from testdbx where share = ? ",{
         share: {value: "BBL", type: "STRING"}
     });

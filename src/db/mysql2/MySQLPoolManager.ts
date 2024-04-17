@@ -1,10 +1,15 @@
 import mysql from 'mysql2';
 import { Pool } from 'mysql2';
-import { DBConfig } from "../DBConfig";
+import { KnDBConfig } from "../KnDBConfig";
+import config from "will-util";
+
+const CAST_DB_TYPES = config.env("CAST_DB_TYPES","DECIMAL,JSON") as string;
+const CAST_DB_TYPES_DECIMAL = CAST_DB_TYPES.indexOf("DECIMAL") >= 0;
+const CAST_DB_TYPES_JSON = CAST_DB_TYPES.indexOf("JSON") >= 0;
 
 export class MySQLPoolManager {
     public static pools = new Map<string,Pool>();
-    public static getPool(dbcfg: DBConfig) : Pool {
+    public static getPool(dbcfg: KnDBConfig) : Pool {
         let pool = this.pools.get(dbcfg.schema);
         if(!pool) {
             pool = mysql.createPool({
@@ -12,7 +17,20 @@ export class MySQLPoolManager {
                 password: dbcfg.password,
                 host: dbcfg.host,
                 port: dbcfg.port,
-                database: dbcfg.database,
+                database: dbcfg.database,                
+                typeCast: function (field: any, next: any) {
+                    if (field.type == 'BIT' && field.length == 1) {
+                        let value = field.buffer();
+                        return (value === null) ? null : value[0] === 1;
+                    } else if (CAST_DB_TYPES_DECIMAL && (field.type == "DECIMAL" || field.type == "NEWDECIMAL")) {
+                        let value = field.string();
+                        return (value === null) ? null : Number(value);
+                    } else if (CAST_DB_TYPES_JSON && field.type == 'JSON') {
+                        let value = field.string();
+                        return (value === null) ? null : JSON.parse(value.toString('utf8'));
+                    }
+                    return next();
+                },
                 ...dbcfg.options
             });
             this.pools.set(dbcfg.schema,pool);

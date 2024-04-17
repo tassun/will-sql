@@ -1,16 +1,16 @@
 import { Request, Transaction } from 'mssql';
 import { MsSQLDBQuery } from "./MsSQLDBQuery";
 import { MsSQLDBConnection } from "./MsSQLDBConnection";
-import { DBParam, ResultSet, SQLOptions } from "../DBAlias";
-import { DBConnect } from "../DBConnect";
-import { DBConfig } from '../DBConfig';
+import { KnDBParam, KnResultSet, KnSQLOptions } from "../KnDBAlias";
+import { KnDBConnect } from "../KnDBConnect";
+import { KnDBConfig } from '../KnDBConfig';
 
-class MsSQLDB extends DBConnect {
+class MsSQLDB extends KnDBConnect {
     protected connector: MsSQLDBConnection;
     public connection? : Request;
     public transaction? : Transaction;
 
-    constructor(config: DBConfig,connection?: Request) {
+    constructor(config: KnDBConfig,connection?: Request) {
         super("MSSQL","mssql",config);
         this.connector = new MsSQLDBConnection(config);
         this.connection = connection;
@@ -31,12 +31,12 @@ class MsSQLDB extends DBConnect {
         this.transaction = undefined;
     }
 
-    protected override async doExecuteQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteQuery(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
         await this.initConnection();
         return await MsSQLDBQuery.executeQuery(this.connection as Request,sql, params);
     }        
 
-    protected override async doExecuteUpdate(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteUpdate(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
         await this.initConnection();
         return await MsSQLDBQuery.executeUpdate(this.connection as Request,sql, params);
     }

@@ -1,13 +1,13 @@
 import oracledb from 'oracledb';
 import { Connection } from 'oracledb';
-import { ResultSet, SQLOptions, DBParam } from "../DBAlias";
-import { DBUtils } from '../DBUtils';
+import { KnResultSet, KnSQLOptions, KnDBParam } from "../KnDBAlias";
+import { KnDBUtils } from '../KnDBUtils';
 
 export class OracleDBQuery {
     
-    public static async executeQuery(conn: Connection, query: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
-        let sql = DBUtils.getQuery(query);
-        let [parameters] = DBUtils.extractDBParam(params);
+    public static async executeQuery(conn: Connection, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+        let sql = KnDBUtils.getQuery(query);
+        let [parameters] = KnDBUtils.extractDBParam(params);
         let result = await conn.execute(sql, parameters, {
             outFormat: oracledb.OUT_FORMAT_OBJECT,
             extendedMetaData: true
@@ -15,9 +15,9 @@ export class OracleDBQuery {
         return Promise.resolve({ rows: result.rows, columns: result.metaData });
     }
 
-    public static async executeUpdate(conn: Connection, query: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
-        let sql = DBUtils.getQuery(query);
-        let [parameters] = DBUtils.extractDBParam(params);
+    public static async executeUpdate(conn: Connection, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+        let sql = KnDBUtils.getQuery(query);
+        let [parameters] = KnDBUtils.extractDBParam(params);
         let result = await conn.execute(sql, parameters, {
             outFormat: oracledb.OUT_FORMAT_OBJECT,
             extendedMetaData: true

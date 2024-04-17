@@ -1,11 +1,11 @@
 import { Pool, PoolClient } from 'pg';
-import { DBConfig } from "../DBConfig";
+import { KnDBConfig } from "../KnDBConfig";
 import { PgSQLPoolManager } from "./PgSQLPoolManager";
 
 export class PgSQLDBConnection {
-    private config: DBConfig;
+    private config: KnDBConfig;
 
-    constructor(config: DBConfig) {
+    constructor(config: KnDBConfig) {
         this.config = config;
     }
 

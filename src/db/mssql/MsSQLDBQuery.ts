@@ -1,14 +1,14 @@
 import { Request } from 'mssql';
-import { ResultSet, DBParam, SQLOptions } from "../DBAlias";
-import { DBUtils } from '../DBUtils';
+import { KnResultSet, KnDBParam, KnSQLOptions } from "../KnDBAlias";
+import { KnDBUtils } from '../KnDBUtils';
 
 export class MsSQLDBQuery {
 
-    private static assignParameters(conn: Request,params?: DBParam) {
+    private static assignParameters(conn: Request,params?: KnDBParam) {
         if(params) {
             for(let p in params) {
                 let pv = params[p];
-                let paraValue = DBUtils.parseParamValue(pv);
+                let paraValue = KnDBUtils.parseParamValue(pv);
                 try {
                     conn.input(p,paraValue);
                 } catch(ex) {
@@ -18,8 +18,8 @@ export class MsSQLDBQuery {
         }
     }
     
-    public static async executeQuery(conn: Request, query: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
-        let sql = DBUtils.getQuery(query);
+    public static async executeQuery(conn: Request, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+        let sql = KnDBUtils.getQuery(query);
         this.assignParameters(conn, params);
         let req = conn as any;
         req.arrayRowMode = true;
@@ -37,8 +37,8 @@ export class MsSQLDBQuery {
         return Promise.resolve({ rows: rows, columns: cols });
     }
 
-    public static async executeUpdate(conn: Request, query: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
-        let sql = DBUtils.getQuery(query);
+    public static async executeUpdate(conn: Request, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+        let sql = KnDBUtils.getQuery(query);
         this.assignParameters(conn, params);
         let result = await conn.query(sql);
         return Promise.resolve({ rows: { affectedRows : result.rowsAffected[0] }, columns: null });

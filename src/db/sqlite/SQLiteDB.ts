@@ -1,15 +1,15 @@
 import { SQLiteDBQuery } from "./SQLiteDBQuery";
 import { SQLiteDBConnection } from "./SQLiteDBConnection";
-import { DBParam, ResultSet, SQLOptions } from "../DBAlias";
-import { DBConnect } from "../DBConnect";
-import { DBConfig } from "../DBConfig";
+import { KnDBParam, KnResultSet, KnSQLOptions } from "../KnDBAlias";
+import { KnDBConnect } from "../KnDBConnect";
+import { KnDBConfig } from "../KnDBConfig";
 import { Database } from "sqlite3";
 
-class SQLiteDB extends DBConnect {
+class SQLiteDB extends KnDBConnect {
     protected connector : SQLiteDBConnection;
     public connection? : Database;
 
-    constructor(config: DBConfig,connection?: any) {
+    constructor(config: KnDBConfig,connection?: any) {
         super("SQLITE","sqlite",config);
         this.connector = new SQLiteDBConnection(config);
         this.connection = connection;
@@ -29,12 +29,12 @@ class SQLiteDB extends DBConnect {
         this.connection = undefined;
     }
 
-    protected override async doExecuteQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteQuery(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
         await this.initConnection();
         return await SQLiteDBQuery.executeQuery(this.connection as Database,sql, params);
     }        
 
-    protected override async doExecuteUpdate(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteUpdate(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
         await this.initConnection();
         return await SQLiteDBQuery.executeUpdate(this.connection as Database,sql, params);
     }

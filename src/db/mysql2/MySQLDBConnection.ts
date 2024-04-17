@@ -1,11 +1,11 @@
 import { Connection, Pool, PoolConnection } from 'mysql2';
-import { DBConfig } from "../DBConfig";
+import { KnDBConfig } from "../KnDBConfig";
 import { MySQLPoolManager } from './MySQLPoolManager';
 
 export class MySQLDBConnection {
-    private config: DBConfig;
+    private config: KnDBConfig;
 
-    constructor(config: DBConfig) {
+    constructor(config: KnDBConfig) {
         this.config = config;
     }
 

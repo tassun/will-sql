@@ -1,7 +1,7 @@
-import { DBConnections } from "../db/DBConnections";
+import { KnDBConnections } from "../db/KnDBConnections";
 
 async function testdb() {
-    const db = DBConnections.getDBConnector("ORACLE");
+    const db = KnDBConnections.getDBConnector("ORACLE");
     console.log("db",db);
     let rs = await db.executeQuery("select * from testdbx");
     console.log("rs",rs);
@@ -9,7 +9,7 @@ async function testdb() {
 }
 
 async function testupdate() {
-    const db = DBConnections.getDBConnector("ORACLE");
+    const db = KnDBConnections.getDBConnector("ORACLE");
     let rs = await db.executeQuery("select * from testdbx where sharecode = :sharecode ",{
         sharecode: {value: "BBL", type: "STRING"}
     });

@@ -52,13 +52,13 @@ async function testdb() {
 
 ##### type script
 ```typescript
-import { KnSQL, DBConnections } from "will-sql";
+import { KnSQL, KnDBConnections } from "will-sql";
 
 async function testQuery() {
     let knsql = new KnSQL();
     knsql.append("select * from testdbx where share = ?share ");
     knsql.set("share","BBL");
-    const db = DBConnections.getDBConnector("MYSQL");
+    const db = KnDBConnections.getDBConnector("MYSQL");
     let rs = await knsql.executeQuery(db);
     console.log("rs",rs);
     db.close();
@@ -68,14 +68,14 @@ async function testQuery() {
 ### Transaction
 
 ```typescript
-import { KnSQL, DBConnections } from "will-sql";
+import { KnSQL, KnDBConnections } from "will-sql";
 
 async function testTransaction() {
     let knsql = new KnSQL();
     knsql.append("update testdbx set percent = ?percent where mktid = ?mktid ");
     knsql.set("percent",60);
     knsql.set("mktid","TST");
-    const db = DBConnections.getDBConnector("MYSQL");
+    const db = KnDBConnections.getDBConnector("MYSQL");
     try {
         await db.beginWork();
         let rs = await knsql.executeUpdate(db);
@@ -89,19 +89,19 @@ async function testTransaction() {
 ```
 
 ### Database Connector
-In order to get database connection `DBConnections.getDBConnector` or `getDBConnector` method can specified by configuration section or configuration setting to establish
+In order to get database connection `KnDBConnections.getDBConnector` or `getDBConnector` method can specified by configuration section or configuration setting to establish
 
 #### configuration section
 
 ```typescript
-    const db = DBConnections.getDBConnector("MYSQL");
+    const db = KnDBConnections.getDBConnector("MYSQL");
 ```
 For example `"MYSQL"` point to section in config/default.json
 
 #### configuration setting
 
 ```typescript
-    const db = DBConnections.getDBConnector({
+    const db = KnDBConnections.getDBConnector({
         schema: "MYSQL", 
         alias: "mysql", 
         dialect: "mysql", 
@@ -120,10 +120,10 @@ Database adapter now support for `mysql`, `mssql`, `odbc`, `oracle` and `postgre
     npm install mysql
 
 ```typescript
-import { DBConnections } from "will-sql";
+import { KnDBConnections } from "will-sql";
 
 async function testdb() {
-    const db = DBConnections.getDBConnector("MYSQL");
+    const db = KnDBConnections.getDBConnector("MYSQL");
     let rs = await db.executeQuery("select * from testdbx where percent > ? ",{ 
         percent: {value: 50, type: "DECIMAL"} 
     });
@@ -136,10 +136,10 @@ async function testdb() {
     npm install mysql2
 
 ```typescript
-import { DBConnections } from "will-sql";
+import { KnDBConnections } from "will-sql";
 
 async function testdb() {
-    const db = DBConnections.getDBConnector("MYSQL2");
+    const db = KnDBConnections.getDBConnector("MYSQL2");
     let rs = await db.executeQuery("select * from testdbx where percent > ? ",{ 
         percent: {value: 50, type: "DECIMAL"} 
     });
@@ -152,10 +152,10 @@ async function testdb() {
     npm install odbc
 
 ```typescript
-import { DBConnections } from "will-sql";
+import { KnDBConnections } from "will-sql";
 
 async function testdb() {
-    const db = DBConnections.getDBConnector("ODBC");
+    const db = KnDBConnections.getDBConnector("ODBC");
     let rs = await db.executeQuery("select * from testdbx where percent > ? ",{ 
         percent: {value: 50, type: "DECIMAL"} 
     });
@@ -168,10 +168,10 @@ async function testdb() {
     npm install mssql
 
 ```typescript
-import { DBConnections } from "will-sql";
+import { KnDBConnections } from "will-sql";
 
 async function testdb() {
-    const db = DBConnections.getDBConnector("MSSQL");
+    const db = KnDBConnections.getDBConnector("MSSQL");
     console.log("db",db);
     let rs = await db.executeQuery("select * from testdbx where percentage > @percentage ",{ 
         percentage: {value: 50, type: "DECIMAL"} 
@@ -185,10 +185,10 @@ async function testdb() {
     npm install oracledb
 
 ```typescript
-import { DBConnections } from "will-sql";
+import { KnDBConnections } from "will-sql";
 
 async function testdb() {
-    const db = DBConnections.getDBConnector("ORACLE");
+    const db = KnDBConnections.getDBConnector("ORACLE");
     let rs = await db.executeQuery("select * from testdbx where percentage > :percentage ",{ 
         percentage: {value: 50, type: "DECIMAL"} 
     });
@@ -201,10 +201,10 @@ async function testdb() {
     npm install pg
 
 ```typescript
-import { DBConnections } from "will-sql";
+import { KnDBConnections } from "will-sql";
 
 async function testdb() {
-    const db = DBConnections.getDBConnector("POSTGRES");
+    const db = KnDBConnections.getDBConnector("POSTGRES");
     let rs = await db.executeQuery("select * from testdbx where percentage > $1 ",{ 
         percentage: {value: 50, type: "DECIMAL"} 
     });
@@ -217,10 +217,10 @@ async function testdb() {
     npm install sqlite3
 
 ```typescript
-import { DBConnections } from "will-sql";
+import { KnDBConnections } from "will-sql";
 
 async function testdb() {
-    const db = DBConnections.getDBConnector("SQLITE");
+    const db = KnDBConnections.getDBConnector("SQLITE");
 
     await db.executeUpdate("create table testdbx(share text, mktid text, yield numeric, percent numeric)");
     await db.executeUpdate("insert into testdbx(share,mktid,yield,percent) values('BBL','TEST',100.50,25.50)");
@@ -241,13 +241,13 @@ async function testdb() {
 Database adapter has connector via connection pool then after used, all connection pools must be closed (or else it do not exit to commamd prompt when running as stand alone application)
 
 ```typescript
-import { KnSQL, DBConnections } from "will-sql";
+import { KnSQL, KnDBConnections } from "will-sql";
 
 async function testQuery() {
     let knsql = new KnSQL();
     knsql.append("select * from testdbx where share = ?share ");
     knsql.set("share","BBL");
-    const db = DBConnections.getDBConnector("MYSQL");
+    const db = KnDBConnections.getDBConnector("MYSQL");
     let rs = await knsql.executeQuery(db);
     console.log("rs",rs);
     db.close(); //release connection to pool

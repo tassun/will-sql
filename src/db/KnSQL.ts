@@ -1,13 +1,12 @@
 import { StringTokenizer } from "will-util";
-import { DBConnector, DBAlias, DBTypes, DBParam, DBValue, DBParamValue, ResultSet, SQLOptions, SQLInterface } from "./DBAlias";
-import { DBUtils } from "./DBUtils";
-import { DBError } from "./DBError";
+import { KnDBConnector, KnDBAlias, KnDBTypes, KnEnumDBTypes, KnDBParam, KnDBValue, KnDBParamValue, KnResultSet, KnSQLOptions, KnSQLInterface } from "./KnDBAlias";
+import { KnDBUtils } from "./KnDBUtils";
+import { KnDBError } from "./KnDBError";
 
-type EnumDBTypes = keyof typeof DBTypes;
-export class KnSQL implements SQLInterface {
+export class KnSQL implements KnSQLInterface {
     public sql: string;
     public options?: any;
-    public readonly params : Map<string,DBValue> = new Map();
+    public readonly params : Map<string,KnDBValue> = new Map();
     constructor(sql: string = "", options?: any) {
         this.sql = sql;
         this.options = options;
@@ -25,42 +24,42 @@ export class KnSQL implements SQLInterface {
     }
     public set(
         paramname: string, 
-        paramvalue: (string | number | boolean | bigint | null | undefined | Date | Buffer | DBParamValue), 
-        paramtype: (DBTypes | EnumDBTypes) = DBTypes.STRING) 
+        paramvalue: (string | number | boolean | bigint | null | undefined | Date | Buffer | KnDBParamValue), 
+        paramtype: (KnDBTypes | KnEnumDBTypes) = KnDBTypes.STRING) 
         : KnSQL {   
         if(paramvalue === null) {
-            this.params.set(paramname, new DBParamValue(paramvalue, DBUtils.parseDBTypes(paramtype)));
-        } else if(paramvalue instanceof DBParamValue) {
+            this.params.set(paramname, new KnDBParamValue(paramvalue, KnDBUtils.parseDBTypes(paramtype)));
+        } else if(paramvalue instanceof KnDBParamValue) {
             this.params.set(paramname, paramvalue);
         } else if(paramvalue instanceof Date) {
-            this.params.set(paramname, new DBParamValue(paramvalue, DBUtils.parseDBTypes(paramtype)));
+            this.params.set(paramname, new KnDBParamValue(paramvalue, KnDBUtils.parseDBTypes(paramtype)));
         } else {
             if(typeof paramvalue === "string" ) {
-                this.params.set(paramname, new DBParamValue(paramvalue, DBUtils.parseDBTypes(paramtype)));
+                this.params.set(paramname, new KnDBParamValue(paramvalue, KnDBUtils.parseDBTypes(paramtype)));
             } else if(typeof paramvalue === "number") {
-                this.params.set(paramname, new DBParamValue(paramvalue, DBUtils.parseDBTypes(paramtype)));
+                this.params.set(paramname, new KnDBParamValue(paramvalue, KnDBUtils.parseDBTypes(paramtype)));
             } else if(typeof paramvalue === "boolean") {
-                this.params.set(paramname, new DBParamValue(paramvalue, DBTypes.BOOLEAN));
+                this.params.set(paramname, new KnDBParamValue(paramvalue, KnDBTypes.BOOLEAN));
             } else if(typeof paramvalue === "bigint") {
-                this.params.set(paramname, new DBParamValue(paramvalue, DBTypes.BIGINT));
+                this.params.set(paramname, new KnDBParamValue(paramvalue, KnDBTypes.BIGINT));
             } else if(typeof paramvalue === "undefined") {
-                this.params.set(paramname, new DBParamValue(paramvalue, DBUtils.parseDBTypes(paramtype)));
+                this.params.set(paramname, new KnDBParamValue(paramvalue, KnDBUtils.parseDBTypes(paramtype)));
             }
         }
         return this;
     }
-    public param(name: string) : DBValue {
+    public param(name: string) : KnDBValue {
         let result = this.params.get(name);
-        if(!result) throw new DBError("Parameter '"+name+"' not found",-10101);
+        if(!result) throw new KnDBError("Parameter '"+name+"' not found",-10101);
         return result;
     }
-    public getExactlySql(alias: (string | DBAlias) = DBAlias.MYSQL) : [string,string[]] {
-        let dbalias = DBUtils.parseDBAlias(alias);
-        let odbc = dbalias == DBAlias.ODBC;
-        let mysql = dbalias == DBAlias.MYSQL;
-        let mssql = dbalias == DBAlias.MSSQL;
-        let oracle = dbalias == DBAlias.ORACLE;
-        let postgres = dbalias == DBAlias.POSTGRES;
+    public getExactlySql(alias: (string | KnDBAlias) = KnDBAlias.MYSQL) : [string,string[]] {
+        let dbalias = KnDBUtils.parseDBAlias(alias);
+        let odbc = dbalias == KnDBAlias.ODBC;
+        let mysql = dbalias == KnDBAlias.MYSQL;
+        let mssql = dbalias == KnDBAlias.MSSQL;
+        let oracle = dbalias == KnDBAlias.ORACLE;
+        let postgres = dbalias == KnDBAlias.POSTGRES;
         let sqlidx = 0;
         let sqlstr = "";
         let paramnames : string[] = [];
@@ -98,19 +97,19 @@ export class KnSQL implements SQLInterface {
         };
         return results;
     }
-    public getDBParam(names: string[]) : DBParam {
-        let results : DBParam = {};
+    public getDBParam(names: string[]) : KnDBParam {
+        let results : KnDBParam = {};
         for(let name of names) {
             results[name] = this.param(name);
         }
         return results;
     }
-    public getSQLOptions(db: DBConnector) : [SQLOptions, DBParam] {
+    public getSQLOptions(db: KnDBConnector) : [KnSQLOptions, KnDBParam] {
         let [sql,paramnames] = this.getExactlySql(db.alias);
         let dbparam = this.getDBParam(paramnames);
         return [{ sql: sql, options: this.options }, dbparam];
     }
-    public async executeQuery(db: DBConnector, ctx?: any) : Promise<ResultSet> {
+    public async executeQuery(db: KnDBConnector, ctx?: any) : Promise<KnResultSet> {
         let span = this.createSpan(db,ctx);
         try {
             let [sqlopts,dbparam] = this.getSQLOptions(db);
@@ -119,7 +118,7 @@ export class KnSQL implements SQLInterface {
             if(span) span.finish();
         }
     }
-    public async executeUpdate(db: DBConnector, ctx?: any) : Promise<ResultSet> {
+    public async executeUpdate(db: KnDBConnector, ctx?: any) : Promise<KnResultSet> {
         let span = this.createSpan(db,ctx);
         try {
             let [sqlopts,dbparam] = this.getSQLOptions(db);
@@ -128,7 +127,7 @@ export class KnSQL implements SQLInterface {
             if(span) span.finish();
         }
     }
-    public createSpan(db: DBConnector, ctx?: any) : any {
+    public createSpan(db: KnDBConnector, ctx?: any) : any {
         try {
             if(ctx) {
                 return ctx.startSpan(db.constructor.name,{tags: {sql: this.sql, config: db.config}});

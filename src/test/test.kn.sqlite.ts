@@ -1,10 +1,10 @@
-import { DBConnections } from "../db/DBConnections";
+import { KnDBConnections } from "../db/KnDBConnections";
 import { KnSQL } from "../db/KnSQL";
 
 async function testdb() {
     let knsql = new KnSQL();
     knsql.append("create table testdbx(share text, mktid text, yield numeric, percent numeric) ");
-    const db = DBConnections.getDBConnector("SQLITE");
+    const db = KnDBConnections.getDBConnector("SQLITE");
     let rs = await knsql.executeUpdate(db);
     console.log("rs",rs);
 
@@ -19,7 +19,7 @@ async function testdb() {
 }
 
 async function testselect() {
-    const db = DBConnections.getDBConnector("SQLITE");
+    const db = KnDBConnections.getDBConnector("SQLITE");
     let knsql = new KnSQL();
     knsql.append("select * from testdbx ");
     let rs = await knsql.executeQuery(db);
@@ -30,7 +30,7 @@ async function testquery() {
     let knsql = new KnSQL();
     knsql.append("select * from testdbx where share = ?share ");
     knsql.set("share","BBL");
-    const db = DBConnections.getDBConnector("SQLITE");
+    const db = KnDBConnections.getDBConnector("SQLITE");
     let rs = await knsql.executeQuery(db);
     console.log("rs",rs);
 }
@@ -40,7 +40,7 @@ async function testupdate() {
     knsql.append("update testdbx set percent = ?percent where mktid = ?mktid ");
     knsql.set("percent",60);
     knsql.set("mktid","TSO");
-    const db = DBConnections.getDBConnector("SQLITE");
+    const db = KnDBConnections.getDBConnector("SQLITE");
     let rs = await knsql.executeUpdate(db);
     console.log("update",rs);
     await testselect();

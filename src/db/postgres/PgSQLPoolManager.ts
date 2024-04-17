@@ -1,9 +1,9 @@
 import { Pool } from 'pg';
-import { DBConfig } from "../DBConfig";
+import { KnDBConfig } from "../KnDBConfig";
 
 export class PgSQLPoolManager {
     public static pools = new Map<string,Pool>();
-    public static getPool(dbcfg: DBConfig) : Pool {
+    public static getPool(dbcfg: KnDBConfig) : Pool {
         let pool = this.pools.get(dbcfg.schema);
         if(!pool) {
             pool = new Pool({

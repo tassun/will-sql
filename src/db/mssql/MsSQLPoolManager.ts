@@ -1,10 +1,10 @@
 import mssql from 'mssql';
 import { ConnectionPool } from 'mssql';
-import { DBConfig } from "../DBConfig";
+import { KnDBConfig } from "../KnDBConfig";
 
 export class MsSQLPoolManager {
     public static pools = new Map<string,ConnectionPool>();
-    public static async getPool(dbcfg: DBConfig) : Promise<ConnectionPool> {
+    public static async getPool(dbcfg: KnDBConfig) : Promise<ConnectionPool> {
         let pool = this.pools.get(dbcfg.schema);
         if(!pool) {
             let appool = new mssql.ConnectionPool(dbcfg.url);

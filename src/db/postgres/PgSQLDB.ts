@@ -1,15 +1,15 @@
 import { PoolClient } from 'pg';
 import { PgSQLDBQuery } from "./PgSQLDBQuery";
 import { PgSQLDBConnection } from "./PgSQLDBConnection";
-import { DBParam, ResultSet, SQLOptions } from "../DBAlias";
-import { DBConnect } from "../DBConnect";
-import { DBConfig } from '../DBConfig';
+import { KnDBParam, KnResultSet, KnSQLOptions } from "../KnDBAlias";
+import { KnDBConnect } from "../KnDBConnect";
+import { KnDBConfig } from '../KnDBConfig';
 
-class PgSQLDB extends DBConnect {
+class PgSQLDB extends KnDBConnect {
     protected connector: PgSQLDBConnection;
     public connection? : PoolClient;
 
-    constructor(config: DBConfig,connection?: PoolClient) {
+    constructor(config: KnDBConfig,connection?: PoolClient) {
         super("POSTGRES","postgres",config);
         this.connector = new PgSQLDBConnection(config);
         this.connection = connection;
@@ -29,12 +29,12 @@ class PgSQLDB extends DBConnect {
         this.connection = undefined;
     }
 
-    protected override async doExecuteQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteQuery(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
         await this.initConnection();
         return await PgSQLDBQuery.executeQuery(this.connection as PoolClient,sql, params);
     }        
 
-    protected override async doExecuteUpdate(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteUpdate(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
         await this.initConnection();
         return await PgSQLDBQuery.executeUpdate(this.connection as PoolClient,sql, params);
     }

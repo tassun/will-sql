@@ -1,8 +1,8 @@
-import { DBConnections } from "../db/DBConnections";
+import { KnDBConnections } from "../db/KnDBConnections";
 import { OdbcPoolManager } from "../db/odbc/OdbcPoolManager";
 
 async function testdb1() {
-    const db = DBConnections.getDBConnector("ODBC");
+    const db = KnDBConnections.getDBConnector("ODBC");
     console.log("db",db);
     let rs = await db.executeQuery("select * from testdbx");
     console.log("rs",rs);
@@ -11,7 +11,7 @@ async function testdb1() {
 }
 
 async function testdb2() {
-    const db = DBConnections.getDBConnector("ODBC2");
+    const db = KnDBConnections.getDBConnector("ODBC2");
     console.log("db",db);
     let rs = await db.executeQuery("select * from testdbx");
     console.log("rs",rs);

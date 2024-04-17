@@ -1,14 +1,14 @@
 import { OdbcDBQuery } from "./OdbcDBQuery";
 import { OdbcDBConnection } from "./OdbcDBConnection";
-import { DBParam, ResultSet, SQLOptions } from "../DBAlias";
-import { DBConnect } from "../DBConnect";
-import { DBConfig } from "../DBConfig";
+import { KnDBParam, KnResultSet, KnSQLOptions } from "../KnDBAlias";
+import { KnDBConnect } from "../KnDBConnect";
+import { KnDBConfig } from "../KnDBConfig";
 
-class OdbcDB extends DBConnect {
+class OdbcDB extends KnDBConnect {
     protected connector : OdbcDBConnection;
     public connection? : any;
 
-    constructor(dialect: string,config: DBConfig,connection?: any) {
+    constructor(dialect: string,config: KnDBConfig,connection?: any) {
         super("ODBC",dialect,config);
         this.connector = new OdbcDBConnection(config);
         this.connection = connection;
@@ -28,12 +28,12 @@ class OdbcDB extends DBConnect {
         this.connection = undefined;
     }
 
-    protected override async doExecuteQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteQuery(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
         await this.initConnection();
         return await OdbcDBQuery.executeQuery(this.connection,sql, params);
     }        
 
-    protected override async doExecuteUpdate(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteUpdate(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
         await this.initConnection();
         return await OdbcDBQuery.executeUpdate(this.connection,sql, params);
     }

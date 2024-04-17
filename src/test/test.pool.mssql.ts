@@ -1,8 +1,8 @@
-import { DBConnections } from "../db/DBConnections";
+import { KnDBConnections } from "../db/KnDBConnections";
 import { MsSQLPoolManager } from "../db/mssql/MsSQLPoolManager";
 
 async function testdb1() {
-    const db = DBConnections.getDBConnector("MSSQL");
+    const db = KnDBConnections.getDBConnector("MSSQL");
     console.log("db",db);
     let rs = await db.executeQuery("select * from testdbx");
     console.log("rs",rs);
@@ -11,7 +11,7 @@ async function testdb1() {
 }
 
 async function testdb2() {
-    const db = DBConnections.getDBConnector("MSSQL2");
+    const db = KnDBConnections.getDBConnector("MSSQL2");
     console.log("db",db);
     let rs = await db.executeQuery("select * from testdbx");
     console.log("rs",rs);

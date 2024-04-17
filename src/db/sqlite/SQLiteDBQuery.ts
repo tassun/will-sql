@@ -1,13 +1,13 @@
-import { ResultSet, SQLOptions, DBParam } from "../DBAlias";
-import { DBUtils } from "../DBUtils";
+import { KnResultSet, KnSQLOptions, KnDBParam } from "../KnDBAlias";
+import { KnDBUtils } from "../KnDBUtils";
 import { Database } from "sqlite3";
 
 export class SQLiteDBQuery {
     
-    public static executeQuery(conn: Database, query: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
-        let sql = DBUtils.getQuery(query);
-        let [parameters] = DBUtils.extractDBParam(params);
-        return new Promise<ResultSet>((resolve, reject) => {
+    public static executeQuery(conn: Database, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+        let sql = KnDBUtils.getQuery(query);
+        let [parameters] = KnDBUtils.extractDBParam(params);
+        return new Promise<KnResultSet>((resolve, reject) => {
             conn.all(sql,parameters,(qerr: any, rows: any) => {
                 if(qerr) {
                     reject(qerr);
@@ -19,10 +19,10 @@ export class SQLiteDBQuery {
         });
     }
 
-    public static executeUpdate(conn: Database, query: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
-        let sql = DBUtils.getQuery(query);
-        let [parameters] = DBUtils.extractDBParam(params);
-        return new Promise<ResultSet>((resolve, reject) => {
+    public static executeUpdate(conn: Database, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+        let sql = KnDBUtils.getQuery(query);
+        let [parameters] = KnDBUtils.extractDBParam(params);
+        return new Promise<KnResultSet>((resolve, reject) => {
             conn.run(sql,parameters,(rows: any, qerr: any) => {
                 if(qerr) {
                     reject(qerr);
@@ -35,17 +35,17 @@ export class SQLiteDBQuery {
         });
     }
 
-    public static async statementQuery(conn: Database, query: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
-        let sql = DBUtils.getQuery(query);
-        let [parameters] = DBUtils.extractDBParam(params);
+    public static async statementQuery(conn: Database, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+        let sql = KnDBUtils.getQuery(query);
+        let [parameters] = KnDBUtils.extractDBParam(params);
         const stm = conn.prepare(sql);
         const rows = stm.all(parameters);
         return Promise.resolve({ rows: rows, columns: null });
     }
 
-    public static async statementUpdate(conn: Database, query: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
-        let sql = DBUtils.getQuery(query);
-        let [parameters] = DBUtils.extractDBParam(params);
+    public static async statementUpdate(conn: Database, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+        let sql = KnDBUtils.getQuery(query);
+        let [parameters] = KnDBUtils.extractDBParam(params);
         const stm = conn.prepare(sql);
         const rows = stm.run(parameters) as any;
         let count = rows?.changes;

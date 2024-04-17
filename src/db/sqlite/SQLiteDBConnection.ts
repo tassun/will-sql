@@ -1,11 +1,11 @@
-import { DBConfig } from "../DBConfig";
+import { KnDBConfig } from "../KnDBConfig";
 import { SQLitePoolManager } from "./SQLitePoolManager";
 import { Database } from "sqlite3";
 
 export class SQLiteDBConnection {
-    private config: DBConfig;
+    private config: KnDBConfig;
 
-    constructor(config: DBConfig) {
+    constructor(config: KnDBConfig) {
         this.config = config;
     }
 

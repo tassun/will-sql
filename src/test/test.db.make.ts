@@ -1,4 +1,4 @@
-import { DBConnections } from "../db/DBConnections";
+import { KnDBConnections } from "../db/KnDBConnections";
 import { KnSQL } from "../db/KnSQL";
 
 let dbschema = "MYSQL";
@@ -9,7 +9,7 @@ async function testmake() {
     let values = ["AAA","BBB","CCC","DDD","EEE","FFF","GGG","HHH","III","JJJ","KKK","LLL","MMM","NNN","OOO","PPP","QQQ","RRR","SSS","TTT","UUU","VVV","WWW","XXX","YYY","ZZZ","$$$"];
     let knsql = new KnSQL();
     knsql.append("insert into test1(field1,field2) values(?field1,?field2) ");
-    const db = DBConnections.getDBConnector(dbschema);
+    const db = KnDBConnections.getDBConnector(dbschema);
     await db.beginWork();
     for(let idx in values) {
         let val = values[idx];

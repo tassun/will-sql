@@ -1,15 +1,15 @@
 import { Connection } from 'mysql';
 import { MySQLDBQuery } from "./MySQLDBQuery";
 import { MySQLDBConnection } from "./MySQLDBConnection";
-import { DBParam, ResultSet, SQLOptions } from "../DBAlias";
-import { DBConnect } from "../DBConnect";
-import { DBConfig } from '../DBConfig';
+import { KnDBParam, KnResultSet, KnSQLOptions } from "../KnDBAlias";
+import { KnDBConnect } from "../KnDBConnect";
+import { KnDBConfig } from '../KnDBConfig';
 
-class MySQLDB extends DBConnect {
+class MySQLDB extends KnDBConnect {
     protected connector : MySQLDBConnection;
     public connection? : Connection;
 
-    constructor(config: DBConfig,connection?: Connection) {
+    constructor(config: KnDBConfig,connection?: Connection) {
         super("MYSQL","mysql",config);
         this.connector = new MySQLDBConnection(config);
         this.connection = connection;
@@ -29,12 +29,12 @@ class MySQLDB extends DBConnect {
         this.connection = undefined;
     }
 
-    protected override async doExecuteQuery(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected override async doExecuteQuery(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
         await this.initConnection();
         return await MySQLDBQuery.executeQuery(this.connection as Connection,sql, params);
     }        
 
-    protected async doExecuteUpdate(sql: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
+    protected async doExecuteUpdate(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
         await this.initConnection();
         return await MySQLDBQuery.executeUpdate(this.connection as Connection,sql, params);
     }

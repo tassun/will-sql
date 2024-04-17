@@ -1,20 +1,21 @@
 export {     
-    DBAlias,
-    DBDialect,
-    DBTypes,
-    DBValue,
-    DBParam,
-    DBParamValue,
-    DBConnector, 
-    PageOffset,   
-    ResultSet,
-    RecordSet,
-    SQLOptions,
-    SQLInterface
- } from "./db/DBAlias";
-export { DBConfig, dbconfig } from "./db/DBConfig";
-export { DBError } from "./db/DBError";
-export { DBUtils } from "./db/DBUtils";
-export { DBConnect } from "./db/DBConnect";
-export { DBConnections, getDBConnector } from "./db/DBConnections";
+    KnDBAlias,
+    KnDBDialect,
+    KnDBTypes,
+    KnEnumDBTypes,
+    KnDBValue,
+    KnDBParam,
+    KnDBParamValue,
+    KnDBConnector, 
+    KnPageOffset,   
+    KnResultSet,
+    KnRecordSet,
+    KnSQLOptions,
+    KnSQLInterface
+ } from "./db/KnDBAlias";
+export { KnDBConfig, dbconfig } from "./db/KnDBConfig";
+export { KnDBError } from "./db/KnDBError";
+export { KnDBUtils } from "./db/KnDBUtils";
+export { KnDBConnect, KnEnumDBAlias } from "./db/KnDBConnect";
+export { KnDBConnections, getDBConnector } from "./db/KnDBConnections";
 export { KnSQL } from "./db/KnSQL";

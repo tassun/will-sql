@@ -1,10 +1,10 @@
 import mysql from 'mysql';
 import { Pool, MysqlError } from 'mysql';
-import { DBConfig } from "../DBConfig";
+import { KnDBConfig } from "../KnDBConfig";
 
 export class MySQLPoolManager {
     public static pools = new Map<string,Pool>();
-    public static getPool(dbcfg: DBConfig) : Pool {
+    public static getPool(dbcfg: KnDBConfig) : Pool {
         let pool = this.pools.get(dbcfg.schema);
         if(!pool) {
             pool = mysql.createPool(dbcfg.url);

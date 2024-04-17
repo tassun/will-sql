@@ -1,13 +1,13 @@
 import { PoolClient } from 'pg';
-import { ResultSet, SQLOptions, DBParam } from "../DBAlias";
-import { DBUtils } from '../DBUtils';
+import { KnResultSet, KnSQLOptions, KnDBParam } from "../KnDBAlias";
+import { KnDBUtils } from '../KnDBUtils';
 
 export class PgSQLDBQuery {
     
-    public static executeQuery(conn: PoolClient, query: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
-        let sql = DBUtils.getQuery(query);
-        let [parameters] = DBUtils.extractDBParam(params);
-        return new Promise<ResultSet>((resolve, reject) => {
+    public static executeQuery(conn: PoolClient, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+        let sql = KnDBUtils.getQuery(query);
+        let [parameters] = KnDBUtils.extractDBParam(params);
+        return new Promise<KnResultSet>((resolve, reject) => {
             conn.query(sql,parameters,(qerr, rows) => {
                 if(qerr) {
                     reject(qerr);
@@ -18,10 +18,10 @@ export class PgSQLDBQuery {
         });
     }
 
-    public static executeUpdate(conn: PoolClient, query: string | SQLOptions, params?: DBParam) : Promise<ResultSet> {
-        let sql = DBUtils.getQuery(query);
-        let [parameters] = DBUtils.extractDBParam(params);
-        return new Promise<ResultSet>((resolve, reject) => {
+    public static executeUpdate(conn: PoolClient, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+        let sql = KnDBUtils.getQuery(query);
+        let [parameters] = KnDBUtils.extractDBParam(params);
+        return new Promise<KnResultSet>((resolve, reject) => {
             conn.query(sql,parameters,(qerr, rows) => {
                 if(qerr) {
                     reject(qerr);

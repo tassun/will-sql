@@ -1,4 +1,4 @@
-declare enum DBAlias {
+declare enum KnDBAlias {
     MYSQL = "MYSQL",
     MSSQL = "MSSQL",
     ODBC = "ODBC",
@@ -7,7 +7,7 @@ declare enum DBAlias {
     SQLITE = "SQLITE",
     MYSQL2 = "MYSQL2"
 }
-declare enum DBDialect {
+declare enum KnDBDialect {
     MYSQL = "mysql",
     MSSQL = "mssql",
     ORACLE = "oracle",
@@ -16,7 +16,7 @@ declare enum DBDialect {
     DB2 = "db2",
     SQLITE = "sqlite"
 }
-declare enum DBTypes {
+declare enum KnDBTypes {
     STRING = "STRING",
     INTEGER = "INTEGER",
     DECIMAL = "DECIMAL",
@@ -29,28 +29,28 @@ declare enum DBTypes {
     BLOB = "BLOB",
     CLOB = "CLOB"
 }
-declare type EnumDBTypes = keyof typeof DBTypes;
-interface DBValue {
+declare type KnEnumDBTypes = keyof typeof KnDBTypes;
+interface KnDBValue {
     value: (string | number | boolean | bigint | null | undefined | Date | Buffer);
-    type: (DBTypes | EnumDBTypes);
+    type: (KnDBTypes | KnEnumDBTypes);
 }
-interface DBParam {
-    [name: string]: DBValue;
+interface KnDBParam {
+    [name: string]: KnDBValue;
 }
-declare class DBParamValue implements DBValue {
+declare class KnDBParamValue implements KnDBValue {
     value: (string | number | boolean | bigint | null | undefined | Date | Buffer);
-    type: (DBTypes | EnumDBTypes);
-    constructor(value: (string | number | boolean | bigint | null | undefined | Date | Buffer), type?: (DBTypes | EnumDBTypes));
+    type: (KnDBTypes | KnEnumDBTypes);
+    constructor(value: (string | number | boolean | bigint | null | undefined | Date | Buffer), type?: (KnDBTypes | KnEnumDBTypes));
 }
-interface DBConnector {
-    readonly alias: DBAlias;
+interface KnDBConnector {
+    readonly alias: KnDBAlias;
     readonly dialect: string;
-    readonly config: DBConfig;
+    readonly config: KnDBConfig;
     init(): void;
-    executeQuery(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;
-    executeUpdate(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;
-    execQuery(sql: SQLInterface): Promise<ResultSet>;
-    execUpdate(sql: SQLInterface): Promise<ResultSet>;
+    executeQuery(sql: string | KnSQLOptions, params?: KnDBParam): Promise<KnResultSet>;
+    executeUpdate(sql: string | KnSQLOptions, params?: KnDBParam): Promise<KnResultSet>;
+    execQuery(sql: KnSQLInterface): Promise<KnResultSet>;
+    execUpdate(sql: KnSQLInterface): Promise<KnResultSet>;
     beginWork(): Promise<void>;
     commitWork(): Promise<void>;
     rollbackWork(): Promise<void>;
@@ -58,7 +58,7 @@ interface DBConnector {
     close(): void;
     end(): void;
 }
-interface PageOffset {
+interface KnPageOffset {
     /**
      * Page number
      */
@@ -84,32 +84,32 @@ interface PageOffset {
      */
     offset: number;
 }
-interface ResultSet {
+interface KnResultSet {
     rows: any;
     columns: any;
-    offsets?: PageOffset;
+    offsets?: KnPageOffset;
 }
-interface RecordSet extends ResultSet {
+interface KnRecordSet extends KnResultSet {
     records: number;
 }
-interface SQLOptions {
+interface KnSQLOptions {
     sql: string;
     options?: any;
 }
-interface SQLInterface {
-    params: Map<string, DBValue>;
+interface KnSQLInterface {
+    params: Map<string, KnDBValue>;
     clear(): void;
     clearParameter(): void;
-    append(sql: string): SQLInterface;
-    set(paramname: string, paramvalue: (string | number | boolean | bigint | null | undefined | Date | Buffer | DBParamValue), paramtype?: (DBTypes | EnumDBTypes)): SQLInterface;
-    param(name: string): DBValue;
-    executeQuery(db: DBConnector, ctx?: any): Promise<ResultSet>;
-    executeUpdate(db: DBConnector, ctx?: any): Promise<ResultSet>;
-    getSQLOptions(db: DBConnector): [SQLOptions, DBParam];
+    append(sql: string): KnSQLInterface;
+    set(paramname: string, paramvalue: (string | number | boolean | bigint | null | undefined | Date | Buffer | KnDBParamValue), paramtype?: (KnDBTypes | KnEnumDBTypes)): KnSQLInterface;
+    param(name: string): KnDBValue;
+    executeQuery(db: KnDBConnector, ctx?: any): Promise<KnResultSet>;
+    executeUpdate(db: KnDBConnector, ctx?: any): Promise<KnResultSet>;
+    getSQLOptions(db: KnDBConnector): [KnSQLOptions, KnDBParam];
 }
-export { DBAlias, DBDialect, DBTypes, DBValue, DBParam, DBParamValue, DBConnector, PageOffset, ResultSet, RecordSet, SQLOptions, SQLInterface };
+export { KnDBAlias, KnDBDialect, KnDBTypes, KnEnumDBTypes, KnDBValue, KnDBParam, KnDBParamValue, KnDBConnector, KnPageOffset, KnResultSet, KnRecordSet, KnSQLOptions, KnSQLInterface };
 
-export interface DBConfig {
+export interface KnDBConfig {
     schema: string;
     alias: string;
     dialect: string;
@@ -121,9 +121,35 @@ export interface DBConfig {
     database?: string;
     options?: any;
 }
-export declare const dbconfig: DBConfig;
+export declare const dbconfig: KnDBConfig;
 
-export declare class DBError extends Error {
+export declare type KnEnumDBAlias = keyof typeof KnDBAlias;
+export declare abstract class KnDBConnect implements KnDBConnector {
+    readonly alias: KnDBAlias;
+    readonly dialect: string;
+    readonly config: KnDBConfig;
+    constructor(alias: (KnDBAlias | KnEnumDBAlias), dialect: string, config: KnDBConfig);
+    init(): Promise<void>;
+    protected doExecuteQuery(sql: string | KnSQLOptions, params?: KnDBParam): Promise<KnResultSet>;
+    protected doExecuteUpdate(sql: string | KnSQLOptions, params?: KnDBParam): Promise<KnResultSet>;
+    executeQuery(sql: string | KnSQLOptions, params?: KnDBParam): Promise<KnResultSet>;
+    executeUpdate(sql: string | KnSQLOptions, params?: KnDBParam): Promise<KnResultSet>;
+    execQuery(sql: KnSQLInterface): Promise<KnResultSet>;
+    execUpdate(sql: KnSQLInterface): Promise<KnResultSet>;
+    beginWork(): Promise<void>;
+    commitWork(): Promise<void>;
+    rollbackWork(): Promise<void>;
+    reset(): void;
+    close(): void;
+    end(): void;
+}
+
+export declare class KnDBConnections {
+    static getDBConnector(configure?: (string | KnDBConfig)): KnDBConnector;
+}
+export declare function getDBConnector(section: string): KnDBConnector;
+
+export declare class KnDBError extends Error {
     /**
      * this is error code
      */
@@ -135,66 +161,39 @@ export declare class DBError extends Error {
     constructor(message: string, code: number, state?: string);
 }
 
-export declare class DBUtils {
-    static parseDBTypes(type: string | DBTypes): DBTypes;
-    static parseDBAlias(alias: (string | DBAlias)): DBAlias;
-    static parseDBDialect(dialect: (string | DBDialect)): DBDialect;
-    static parseSQLOptions(query: string | SQLOptions): SQLOptions | undefined;
-    static parseParamValue(param: DBValue): any;
-    static getQuery(query: string | SQLOptions): string;
-    static extractDBParam(params?: DBParam): [any, string[], string[]];
-    static isSQLInterface(element: unknown): element is SQLInterface;
-    static isMYSQL(config: DBConfig): boolean;
-    static isDB2(config: DBConfig): boolean;
-    static isMSSQL(config: DBConfig): boolean;
-    static isINFORMIX(config: DBConfig): boolean;
-    static isORACLE(config: DBConfig): boolean;
-    static isPOSTGRES(config: DBConfig): boolean;
-    static isSQLITE(config: DBConfig): boolean;
+export declare class KnDBUtils {
+    static parseDBTypes(type: string | KnDBTypes): KnDBTypes;
+    static parseDBAlias(alias: (string | KnDBAlias)): KnDBAlias;
+    static parseDBDialect(dialect: (string | KnDBDialect)): KnDBDialect;
+    static parseSQLOptions(query: string | KnSQLOptions): KnSQLOptions | undefined;
+    static parseParamValue(param: KnDBValue): any;
+    static getQuery(query: string | KnSQLOptions): string;
+    static extractDBParam(params?: KnDBParam): [any, string[], string[]];
+    static isSQLInterface(element: unknown): element is KnSQLInterface;
+    static isMYSQL(config: KnDBConfig): boolean;
+    static isDB2(config: KnDBConfig): boolean;
+    static isMSSQL(config: KnDBConfig): boolean;
+    static isINFORMIX(config: KnDBConfig): boolean;
+    static isORACLE(config: KnDBConfig): boolean;
+    static isPOSTGRES(config: KnDBConfig): boolean;
+    static isSQLITE(config: KnDBConfig): boolean;
 }
 
-declare type EnumDBAlias = keyof typeof DBAlias;
-export declare abstract class DBConnect implements DBConnector {
-    readonly alias: DBAlias;
-    readonly dialect: string;
-    readonly config: DBConfig;
-    constructor(alias: (DBAlias | EnumDBAlias), dialect: string, config: DBConfig);
-    init(): Promise<void>;
-    protected doExecuteQuery(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;
-    protected doExecuteUpdate(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;
-    executeQuery(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;
-    executeUpdate(sql: string | SQLOptions, params?: DBParam): Promise<ResultSet>;
-    execQuery(sql: SQLInterface): Promise<ResultSet>;
-    execUpdate(sql: SQLInterface): Promise<ResultSet>;
-    beginWork(): Promise<void>;
-    commitWork(): Promise<void>;
-    rollbackWork(): Promise<void>;
-    reset(): void;
-    close(): void;
-    end(): void;
-}
-
-export declare class DBConnections {
-    static getDBConnector(configure?: (string | DBConfig)): DBConnector;
-}
-export declare function getDBConnector(section: string): DBConnector;
-
-declare type EnumDBTypes = keyof typeof DBTypes;
-export declare class KnSQL implements SQLInterface {
+export declare class KnSQL implements KnSQLInterface {
     sql: string;
     options?: any;
-    readonly params: Map<string, DBValue>;
+    readonly params: Map<string, KnDBValue>;
     constructor(sql?: string, options?: any);
     clear(): void;
     clearParameter(): void;
     append(sql: string): KnSQL;
-    set(paramname: string, paramvalue: (string | number | boolean | bigint | null | undefined | Date | Buffer | DBParamValue), paramtype?: (DBTypes | EnumDBTypes)): KnSQL;
-    param(name: string): DBValue;
-    getExactlySql(alias?: (string | DBAlias)): [string, string[]];
+    set(paramname: string, paramvalue: (string | number | boolean | bigint | null | undefined | Date | Buffer | KnDBParamValue), paramtype?: (KnDBTypes | KnEnumDBTypes)): KnSQL;
+    param(name: string): KnDBValue;
+    getExactlySql(alias?: (string | KnDBAlias)): [string, string[]];
     parameters(names: string[]): any;
-    getDBParam(names: string[]): DBParam;
-    getSQLOptions(db: DBConnector): [SQLOptions, DBParam];
-    executeQuery(db: DBConnector, ctx?: any): Promise<ResultSet>;
-    executeUpdate(db: DBConnector, ctx?: any): Promise<ResultSet>;
-    createSpan(db: DBConnector, ctx?: any): any;
+    getDBParam(names: string[]): KnDBParam;
+    getSQLOptions(db: KnDBConnector): [KnSQLOptions, KnDBParam];
+    executeQuery(db: KnDBConnector, ctx?: any): Promise<KnResultSet>;
+    executeUpdate(db: KnDBConnector, ctx?: any): Promise<KnResultSet>;
+    createSpan(db: KnDBConnector, ctx?: any): any;
 }
