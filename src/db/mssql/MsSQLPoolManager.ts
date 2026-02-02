@@ -1,9 +1,8 @@
-import mssql from 'mssql';
-import { ConnectionPool } from 'mssql';
+import mssql, { ConnectionPool } from 'mssql';
 import { KnDBConfig } from "../KnDBConfig";
 
 export class MsSQLPoolManager {
-    public static pools = new Map<string,ConnectionPool>();
+    public static readonly pools = new Map<string,ConnectionPool>();
     public static async getPool(dbcfg: KnDBConfig) : Promise<ConnectionPool> {
         let pool = this.pools.get(dbcfg.schema);
         if(!pool) {

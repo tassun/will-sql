@@ -1,9 +1,8 @@
-import oracledb from 'oracledb';
-import { Pool, DBError } from 'oracledb';
+import oracledb, { Pool, DBError } from 'oracledb';
 import { KnDBConfig } from "../KnDBConfig";
 
 export class OraclePoolManager {
-    public static pools = new Map<string,Pool>();
+    public static readonly pools = new Map<string,Pool>();
     public static async getPool(dbcfg: KnDBConfig) : Promise<Pool> {
         let pool = this.pools.get(dbcfg.schema);
         if(!pool) {

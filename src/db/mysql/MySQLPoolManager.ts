@@ -1,9 +1,8 @@
-import mysql from 'mysql';
-import { Pool, MysqlError } from 'mysql';
+import mysql, { Pool, MysqlError } from 'mysql';
 import { KnDBConfig } from "../KnDBConfig";
 
 export class MySQLPoolManager {
-    public static pools = new Map<string,Pool>();
+    public static readonly pools = new Map<string,Pool>();
     public static getPool(dbcfg: KnDBConfig) : Pool {
         let pool = this.pools.get(dbcfg.schema);
         if(!pool) {

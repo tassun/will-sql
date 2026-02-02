@@ -3,7 +3,7 @@ import { KnDBConfig } from "../KnDBConfig";
 import { PgSQLPoolManager } from "./PgSQLPoolManager";
 
 export class PgSQLDBConnection {
-    private config: KnDBConfig;
+    private readonly config: KnDBConfig;
 
     constructor(config: KnDBConfig) {
         this.config = config;

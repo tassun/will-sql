@@ -17,7 +17,7 @@ class MsSQLDB extends KnDBConnect {
     }
 
     protected async initConnection() {
-        if(this.connection==undefined || this.connection==null) {
+        if(!this.connection) {
             this.connection = await this.connector.getConnection(this.transaction);
         }
     }
@@ -26,17 +26,22 @@ class MsSQLDB extends KnDBConnect {
         await this.initConnection();
     }
 
+    public override async getConnection() : Promise<any> {
+        await this.initConnection();
+        return this.connection;
+    }
+
     public override reset() : void {
         this.connection = undefined;
         this.transaction = undefined;
     }
 
-    protected override async doExecuteQuery(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+    protected override async doExecuteQuery(sql: string | KnSQLOptions, params?: KnDBParam | Array<any>) : Promise<KnResultSet> {
         await this.initConnection();
         return await MsSQLDBQuery.executeQuery(this.connection as Request,sql, params);
     }        
 
-    protected override async doExecuteUpdate(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+    protected override async doExecuteUpdate(sql: string | KnSQLOptions, params?: KnDBParam | Array<any>) : Promise<KnResultSet> {
         await this.initConnection();
         return await MsSQLDBQuery.executeUpdate(this.connection as Request,sql, params);
     }

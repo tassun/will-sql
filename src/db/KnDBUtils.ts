@@ -3,53 +3,70 @@ import { KnDBAlias, KnDBDialect, KnDBTypes, KnDBParam, KnDBValue, KnSQLOptions, 
 import { KnDBConfig } from "./KnDBConfig";
 import { KnDBError } from "./KnDBError";
 
+const RESERVE_QUERIES = ["insert","update","delete","drop","alter","execute","exec","truncate"];
+
 export class KnDBUtils {
     public static parseDBTypes(type:string | KnDBTypes) : KnDBTypes {
-        if(typeof type === "string") {
-            if(Utilities.equalsIgnoreCase(type,"INTEGER") || Utilities.equalsIgnoreCase(type,"NUMBER")) return KnDBTypes.INTEGER;
-            if(Utilities.equalsIgnoreCase(type,"DECIMAL")) return KnDBTypes.DECIMAL;
-            if(Utilities.equalsIgnoreCase(type,"BOOLEAN")) return KnDBTypes.BOOLEAN;
-            if(Utilities.equalsIgnoreCase(type,"BIGINT")) return KnDBTypes.BIGINT;
-            if(Utilities.equalsIgnoreCase(type,"TEXT")) return KnDBTypes.TEXT;
-            if(Utilities.equalsIgnoreCase(type,"DATE")) return KnDBTypes.DATE;
-            if(Utilities.equalsIgnoreCase(type,"TIME")) return KnDBTypes.TIME;
-            if(Utilities.equalsIgnoreCase(type,"DATETIME")) return KnDBTypes.DATETIME;
-            if(Utilities.equalsIgnoreCase(type,"BLOB")) return KnDBTypes.BLOB;
-            if(Utilities.equalsIgnoreCase(type,"CLOB")) return KnDBTypes.CLOB;
-            return KnDBTypes.STRING;
-        } else {
+        if (typeof type !== "string") {
             return type;
         }
+        const t = type.toUpperCase();
+        const typeMap: Record<string, KnDBTypes> = {
+            INTEGER: KnDBTypes.INTEGER,
+            NUMBER: KnDBTypes.INTEGER,
+            DECIMAL: KnDBTypes.DECIMAL,
+            BOOLEAN: KnDBTypes.BOOLEAN,
+            BIGINT: KnDBTypes.BIGINT,
+            TEXT: KnDBTypes.TEXT,
+            DATE: KnDBTypes.DATE,
+            TIME: KnDBTypes.TIME,
+            DATETIME: KnDBTypes.DATETIME,
+            BLOB: KnDBTypes.BLOB,
+            CLOB: KnDBTypes.CLOB
+        };
+        return typeMap[t] ?? KnDBTypes.STRING;
     }
 
     public static parseDBAlias(alias: (string | KnDBAlias)) : KnDBAlias {
-        if(typeof alias === "string") {
-            if(Utilities.equalsIgnoreCase("MYSQL",alias)) return KnDBAlias.MYSQL;
-            if(Utilities.equalsIgnoreCase("MYSQL2",alias)) return KnDBAlias.MYSQL2;
-            if(Utilities.equalsIgnoreCase("MSSQL",alias)) return KnDBAlias.MSSQL;
-            if(Utilities.equalsIgnoreCase("ODBC",alias)) return KnDBAlias.ODBC;
-            if(Utilities.equalsIgnoreCase("ORACLE",alias)) return KnDBAlias.ORACLE;
-            if(Utilities.equalsIgnoreCase("POSTGRES",alias)) return KnDBAlias.POSTGRES;
-            if(Utilities.equalsIgnoreCase("SQLITE",alias)) return KnDBAlias.SQLITE;
-            throw new KnDBError("Unknown alias '"+alias+"'",-10201);
-        } else {
+        if (typeof alias !== "string") {
             return alias;
         }
+        const key = alias.toUpperCase();
+        const aliasMap: Record<string, KnDBAlias> = {
+            MYSQL: KnDBAlias.MYSQL,
+            MYSQL2: KnDBAlias.MYSQL2,
+            MSSQL: KnDBAlias.MSSQL,
+            ODBC: KnDBAlias.ODBC,
+            ORACLE: KnDBAlias.ORACLE,
+            POSTGRES: KnDBAlias.POSTGRES,
+            SQLITE: KnDBAlias.SQLITE
+        };
+        const result = aliasMap[key];
+        if (result === undefined) {
+            throw new KnDBError(`Unknown alias '${alias}'`, -10201);
+        }
+        return result;
     }
 
     public static parseDBDialect(dialect: (string | KnDBDialect)) : KnDBDialect {
-        if(typeof dialect === "string") {
-            if(Utilities.equalsIgnoreCase("mysql",dialect)) return KnDBDialect.MYSQL;
-            if(Utilities.equalsIgnoreCase("mssql",dialect)) return KnDBDialect.MSSQL;
-            if(Utilities.equalsIgnoreCase("oracle",dialect)) return KnDBDialect.ORACLE;
-            if(Utilities.equalsIgnoreCase("postgres",dialect)) return KnDBDialect.POSTGRES;
-            if(Utilities.equalsIgnoreCase("informix",dialect)) return KnDBDialect.INFORMIX;
-            if(Utilities.equalsIgnoreCase("db2",dialect)) return KnDBDialect.DB2;
-            if(Utilities.equalsIgnoreCase("sqlite",dialect)) return KnDBDialect.SQLITE;
-            throw new KnDBError("Unknown dialect '"+dialect+"'",-10202);
-        } else {
+        if (typeof dialect !== "string") {
             return dialect;
         }
+        const key = dialect.toUpperCase();  
+        const dialectMap: Record<string, KnDBDialect> = {
+            MYSQL: KnDBDialect.MYSQL,
+            MSSQL: KnDBDialect.MSSQL,
+            ORACLE: KnDBDialect.ORACLE,
+            POSTGRES: KnDBDialect.POSTGRES,
+            INFORMIX: KnDBDialect.INFORMIX,
+            DB2: KnDBDialect.DB2,
+            SQLITE: KnDBDialect.SQLITE
+        };
+        const result = dialectMap[key];
+        if (result === undefined) {
+            throw new KnDBError(`Unknown dialect '${dialect}'`, -10202);
+        }
+        return result;
     }
 
     public static parseSQLOptions(query: string | KnSQLOptions) : KnSQLOptions | undefined {
@@ -60,12 +77,16 @@ export class KnDBUtils {
         }
     }
 
-    public static parseParamValue(param: KnDBValue) : any {
+    public static parseParamValue(param: KnDBValue, dialect?: string) : any {
         let paramType = this.parseDBTypes(param.type);
         if(paramType==KnDBTypes.DECIMAL || paramType==KnDBTypes.BIGINT || paramType==KnDBTypes.INTEGER) {
             return Utilities.parseFloat(param.value);
         } else if(paramType==KnDBTypes.DATE || paramType==KnDBTypes.DATETIME) {
             return Utilities.parseDate(param.value);
+        } else if(paramType==KnDBTypes.TIME) {
+            if(param.value instanceof Date && "pg"==dialect) {
+                return Utilities.getHMS(param.value);
+            }
         }
         return param.value;
     }
@@ -78,7 +99,7 @@ export class KnDBUtils {
         }
     }
 
-    public static extractDBParam(params?: KnDBParam) : [any, string[], string[]] {        
+    public static extractDBParam(params?: KnDBParam, dialect?: string) : [any, string[], string[]] {        
         let paravalues = [];
         let paranames = [];
         let paratypes = [];
@@ -86,13 +107,13 @@ export class KnDBUtils {
             for(let p in params) {
                 let pv = params[p];
                 paranames.push(p);
-                paravalues.push(this.parseParamValue(pv));
+                paravalues.push(this.parseParamValue(pv,dialect));
                 paratypes.push(pv.type);
             }
         }
         return [paravalues, paranames, paratypes];
     }
-
+    
     public static isSQLInterface(element: unknown) : element is KnSQLInterface {
         return Utilities.hasAttributes(element,  ["sql", "params"]) &&
         typeof element.sql === "string" &&
@@ -120,4 +141,11 @@ export class KnDBUtils {
     public static isSQLITE(config: KnDBConfig) : boolean {
         return this.parseDBDialect(config.dialect)==KnDBDialect.SQLITE;
     }
+    
+    public static hasIntensiveQuery(query: string | undefined | null) : boolean {
+        if(!query || query.trim().length==0) return false;
+        let q = query.toLowerCase();
+        return RESERVE_QUERIES.some(key => q.includes(key));
+    }
+
 }

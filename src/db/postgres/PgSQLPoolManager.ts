@@ -2,7 +2,7 @@ import { Pool } from 'pg';
 import { KnDBConfig } from "../KnDBConfig";
 
 export class PgSQLPoolManager {
-    public static pools = new Map<string,Pool>();
+    public static readonly pools = new Map<string,Pool>();
     public static getPool(dbcfg: KnDBConfig) : Pool {
         let pool = this.pools.get(dbcfg.schema);
         if(!pool) {
@@ -24,11 +24,9 @@ export class PgSQLPoolManager {
     }
     public static destroy() : void {
         let poolary = Array.from(this.pools.values());
-        Promise.all(poolary.map((pool: Pool) => {
-            pool.end(() => {
-            });
-            }
-        ));
+        poolary.forEach(pool => {
+            pool.end(() => { });
+        });
         this.pools.clear();
     }
 }

@@ -4,21 +4,33 @@ import { KnDBUtils } from '../KnDBUtils';
 
 export class MsSQLDBQuery {
 
-    private static assignParameters(conn: Request,params?: KnDBParam) {
-        if(params) {
+    private static assignParameters(conn: Request,params?: KnDBParam | Array<any>) {
+        if(Array.isArray(params)) {
+            for(let i = 0, isz = params.length; i < isz; i++) {
+                let p = "p"+i; //assume that parameter name start with p0,p1,p2,...
+                let paraValue = params[i];
+                try {
+                    conn.input(p,paraValue);
+                } catch(ex) {
+                    console.debug("fallback parameter assignment",ex);
+                    conn.parameters[p].value = paraValue;
+                }
+            }
+        } else if(params) {
             for(let p in params) {
                 let pv = params[p];
                 let paraValue = KnDBUtils.parseParamValue(pv);
                 try {
                     conn.input(p,paraValue);
                 } catch(ex) {
+                    console.debug("fallback parameter assignment",ex);
                     conn.parameters[p].value = paraValue;
                 }
-            }
+            }            
         }
     }
     
-    public static async executeQuery(conn: Request, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+    public static async executeQuery(conn: Request, query: string | KnSQLOptions, params?: KnDBParam | Array<any>) : Promise<KnResultSet> {
         let sql = KnDBUtils.getQuery(query);
         this.assignParameters(conn, params);
         let req = conn as any;
@@ -34,14 +46,14 @@ export class MsSQLDBQuery {
           });
           rows[idx] = json;
         };    
-        return Promise.resolve({ rows: rows, columns: cols });
+        return { rows: rows, columns: cols };
     }
 
-    public static async executeUpdate(conn: Request, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+    public static async executeUpdate(conn: Request, query: string | KnSQLOptions, params?: KnDBParam | Array<any>) : Promise<KnResultSet> {
         let sql = KnDBUtils.getQuery(query);
         this.assignParameters(conn, params);
         let result = await conn.query(sql);
-        return Promise.resolve({ rows: { affectedRows : result.rowsAffected[0] }, columns: null });
+        return { rows: { affectedRows : result.rowsAffected[0] }, columns: null };
     }
 
     public static beginWork(conn: Request) : Promise<void> {

@@ -15,50 +15,54 @@ export abstract class KnDBConnect implements KnDBConnector {
         this.config = config;
     }
 
-    public async init() {
+    public async init() : Promise<void> {
         //do nothing
     }
 
-    protected async doExecuteQuery(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
-        return Promise.reject(null);
+    public async getConnection() : Promise<any> {
+        throw new Error("Not implementation");
     }
 
-    protected async doExecuteUpdate(sql: string| KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
-        return Promise.reject(null);
+    protected async doExecuteQuery(sql: string | KnSQLOptions, params?: KnDBParam | Array<any>) : Promise<KnResultSet> {
+        throw new Error("Not implementation");
     }
 
-    public async executeQuery(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+    protected async doExecuteUpdate(sql: string| KnSQLOptions, params?: KnDBParam | Array<any>) : Promise<KnResultSet> {
+        throw new Error("Not implementation");
+    }
+
+    public async executeQuery(sql: string | KnSQLOptions, params?: KnDBParam | Array<any>, ctx?: any) : Promise<KnResultSet> {
         if(KnDBUtils.isSQLInterface(sql)) {
-            return this.execQuery(sql as KnSQLInterface);
+            return this.execQuery(sql as KnSQLInterface, ctx);
         }
         return this.doExecuteQuery(sql, params);
     }
 
-    public async executeUpdate(sql: string| KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+    public async executeUpdate(sql: string| KnSQLOptions, params?: KnDBParam | Array<any>, ctx?: any) : Promise<KnResultSet> {
         if(KnDBUtils.isSQLInterface(sql)) {
             return this.execUpdate(sql as KnSQLInterface);
         }
         return this.doExecuteUpdate(sql, params);
     }
 
-    public async execQuery(sql: KnSQLInterface) : Promise<KnResultSet> {
-        return sql.executeQuery(this);
+    public async execQuery(sql: KnSQLInterface, ctx?: any) : Promise<KnResultSet> {
+        return sql.executeQuery(this,ctx);
     }
 
-    public async execUpdate(sql: KnSQLInterface) : Promise<KnResultSet> {
-        return sql.executeUpdate(this);
+    public async execUpdate(sql: KnSQLInterface, ctx?: any) : Promise<KnResultSet> {
+        return sql.executeUpdate(this,ctx);
     }
 
     public async beginWork() : Promise<void> {
-        return Promise.reject();
+        throw new Error("Not implementation");
     }
 
     public async commitWork() : Promise<void> {
-        return Promise.reject();
+        throw new Error("Not implementation");
     }
 
     public async rollbackWork() : Promise<void> {
-        return Promise.reject();
+        throw new Error("Not implementation");
     }
 
     public reset() : void {

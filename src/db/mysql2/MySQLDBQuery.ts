@@ -1,12 +1,20 @@
-import { Connection } from 'mysql2';
+import { Connection, QueryResult, ResultSetHeader } from 'mysql2';
 import { KnResultSet, KnSQLOptions, KnDBParam } from "../KnDBAlias";
 import { KnDBUtils } from '../KnDBUtils';
 
 export class MySQLDBQuery {
     
-    public static executeQuery(conn: Connection, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+    public static isResultSet(result: QueryResult): result is ResultSetHeader {
+        return (
+            typeof result === "object" &&
+            result !== null &&
+            "affectedRows" in result
+        );
+    }
+
+    public static executeQuery(conn: Connection, query: string | KnSQLOptions, params?: KnDBParam | Array<any>) : Promise<KnResultSet> {
         let sql = KnDBUtils.getQuery(query);
-        let [parameters] = KnDBUtils.extractDBParam(params);
+        let [parameters] = Array.isArray(params) ? [params] : KnDBUtils.extractDBParam(params);
         return new Promise<KnResultSet>((resolve, reject) => {
             conn.query(sql,parameters,(qerr, rows, fields) => {
                 if(qerr) {
@@ -18,16 +26,16 @@ export class MySQLDBQuery {
         });
     }
 
-    public static executeUpdate(conn: Connection, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+    public static executeUpdate(conn: Connection, query: string | KnSQLOptions, params?: KnDBParam | Array<any>) : Promise<KnResultSet> {
         let sql = KnDBUtils.getQuery(query);
-        let [parameters] = KnDBUtils.extractDBParam(params);
+        let [parameters] = Array.isArray(params) ? [params] : KnDBUtils.extractDBParam(params);
         return new Promise<KnResultSet>((resolve, reject) => {
             conn.query(sql,parameters,(qerr, rows, fields) => {
                 if(qerr) {
                     reject(qerr);
                 } else {
-                    let r = rows as any;
-                    resolve({ rows: { affectedRows: r.affectedRows }, columns: fields });
+                    let affectedRows = this.isResultSet(rows) ? rows.affectedRows : 0;
+                    resolve({ rows: { affectedRows: affectedRows }, columns: fields });
                 }
             });
         });

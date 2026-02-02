@@ -4,9 +4,9 @@ import { KnDBUtils } from '../KnDBUtils';
 
 export class MySQLDBQuery {
     
-    public static executeQuery(conn: Connection, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+    public static executeQuery(conn: Connection, query: string | KnSQLOptions, params?: KnDBParam | Array<any>) : Promise<KnResultSet> {
         let sql = KnDBUtils.getQuery(query);
-        let [parameters] = KnDBUtils.extractDBParam(params);
+        let [parameters] = Array.isArray(params) ? [params] : KnDBUtils.extractDBParam(params);
         return new Promise<KnResultSet>((resolve, reject) => {
             conn.query(sql,parameters,(qerr, rows, fields) => {
                 if(qerr) {
@@ -18,9 +18,9 @@ export class MySQLDBQuery {
         });
     }
 
-    public static executeUpdate(conn: Connection, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+    public static executeUpdate(conn: Connection, query: string | KnSQLOptions, params?: KnDBParam | Array<any>) : Promise<KnResultSet> {
         let sql = KnDBUtils.getQuery(query);
-        let [parameters] = KnDBUtils.extractDBParam(params);
+        let [parameters] = Array.isArray(params) ? [params] : KnDBUtils.extractDBParam(params);
         return new Promise<KnResultSet>((resolve, reject) => {
             conn.query(sql,parameters,(qerr, rows, fields) => {
                 if(qerr) {

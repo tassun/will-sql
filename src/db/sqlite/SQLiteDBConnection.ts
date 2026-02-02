@@ -3,7 +3,7 @@ import { SQLitePoolManager } from "./SQLitePoolManager";
 import { Database } from "sqlite3";
 
 export class SQLiteDBConnection {
-    private config: KnDBConfig;
+    private readonly config: KnDBConfig;
 
     constructor(config: KnDBConfig) {
         this.config = config;

@@ -3,7 +3,7 @@ import { KnDBConfig } from "../KnDBConfig";
 import { MySQLPoolManager } from './MySQLPoolManager';
 
 export class MySQLDBConnection {
-    private config: KnDBConfig;
+    private readonly config: KnDBConfig;
 
     constructor(config: KnDBConfig) {
         this.config = config;
@@ -42,7 +42,6 @@ export class MySQLDBConnection {
     public static releaseConnection(conn: Connection) {
         try {
             let pconn : PoolConnection = conn as PoolConnection;
-            //pconn.release(); 
             pconn.destroy();
         } catch(ex) { 
             console.error(ex);

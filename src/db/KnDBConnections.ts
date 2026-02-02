@@ -1,13 +1,12 @@
-import config from "will-util";
-import { Utilities } from "will-util";
+import config, { Utilities } from "will-util";
 import { DB_SCHEMA, DB_URL, DB_ALIAS, DB_DIALECT, DB_USER, DB_PASSWORD } from "./KnDBVariable";
 import { KnDBError } from './KnDBError';
 import { KnDBConnector } from "./KnDBAlias";
 import { KnDBConfig, dbconfig } from "./KnDBConfig";
 
 export class KnDBConnections {
-    public static getDBConnector(configure: (string | KnDBConfig) = {schema: DB_SCHEMA, alias: DB_ALIAS, dialect: DB_DIALECT, url: DB_URL, user: DB_USER, password: DB_PASSWORD}) : KnDBConnector {
-        //console.log("config",config);
+    public static getDBConnector(configure?: (string | KnDBConfig)) : KnDBConnector {
+        configure = configure ?? {schema: DB_SCHEMA, alias: DB_ALIAS, dialect: DB_DIALECT, url: DB_URL, user: DB_USER, password: DB_PASSWORD};
         if(typeof configure === "string") {
             if(config.has(configure)) {
                 let section = config.get(configure) as KnDBConfig;
@@ -36,7 +35,6 @@ export class KnDBConnections {
             dbconfig.database = configure.database;
             dbconfig.options = configure.options;
         }
-        //console.log("dbconfig",dbconfig);
         if(Utilities.equalsIgnoreCase(dbconfig.alias,"MYSQL")) {
             const MySQLDB = require("./mysql/MySQLDB");
             return new MySQLDB({...dbconfig});

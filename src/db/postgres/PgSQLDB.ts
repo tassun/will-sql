@@ -16,7 +16,7 @@ class PgSQLDB extends KnDBConnect {
     }
 
     private async initConnection() {
-        if(this.connection==undefined || this.connection==null) {
+        if(!this.connection) {
             this.connection = await this.connector.getConnection();
         }
     }
@@ -25,16 +25,21 @@ class PgSQLDB extends KnDBConnect {
         await this.initConnection();
     }
 
+    public override async getConnection() : Promise<any> {
+        await this.initConnection();
+        return this.connection;
+    }
+
     public override reset() : void {
         this.connection = undefined;
     }
 
-    protected override async doExecuteQuery(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+    protected override async doExecuteQuery(sql: string | KnSQLOptions, params?: KnDBParam | Array<any>) : Promise<KnResultSet> {
         await this.initConnection();
         return await PgSQLDBQuery.executeQuery(this.connection as PoolClient,sql, params);
     }        
 
-    protected override async doExecuteUpdate(sql: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+    protected override async doExecuteUpdate(sql: string | KnSQLOptions, params?: KnDBParam | Array<any>) : Promise<KnResultSet> {
         await this.initConnection();
         return await PgSQLDBQuery.executeUpdate(this.connection as PoolClient,sql, params);
     }

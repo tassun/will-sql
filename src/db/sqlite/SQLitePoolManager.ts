@@ -2,7 +2,7 @@ import { KnDBConfig } from "../KnDBConfig";
 import { Database } from "sqlite3";
 
 export class SQLitePoolManager {
-    public static pools = new Map<string,Database>();
+    public static readonly pools = new Map<string,Database>();
     public static getPool(dbcfg: KnDBConfig) : Database {
         let db = this.pools.get(dbcfg.schema);
         if(!db) {

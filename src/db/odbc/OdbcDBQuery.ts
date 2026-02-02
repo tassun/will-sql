@@ -12,9 +12,9 @@ export class OdbcDBQuery {
         });            
     }
 
-    public static executeQuery(conn: any, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+    public static executeQuery(conn: any, query: string | KnSQLOptions, params?: KnDBParam | Array<any>) : Promise<KnResultSet> {
         let sql = KnDBUtils.getQuery(query);
-        let [parameters] = KnDBUtils.extractDBParam(params);
+        let [parameters] = Array.isArray(params) ? [params] : KnDBUtils.extractDBParam(params);
         return new Promise<KnResultSet>((resolve, reject) => {
             conn.query(sql,parameters,(qerr: any, rows: any) => {
                 if(qerr) {
@@ -28,9 +28,9 @@ export class OdbcDBQuery {
         });
     }
 
-    public static executeUpdate(conn: any, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
+    public static executeUpdate(conn: any, query: string | KnSQLOptions, params?: KnDBParam | Array<any>) : Promise<KnResultSet> {
         let sql = KnDBUtils.getQuery(query);
-        let [parameters] = KnDBUtils.extractDBParam(params);
+        let [parameters] = Array.isArray(params) ? [params] : KnDBUtils.extractDBParam(params);
         return new Promise<KnResultSet>((resolve, reject) => {
             conn.query(sql,parameters,(qerr: any, rows: any) => {
                 if(qerr) {
@@ -53,7 +53,7 @@ export class OdbcDBQuery {
         const rows = await stm.execute();
         let columns = rows.columns;
         this.removeAttributes(rows);
-        return Promise.resolve({ rows: rows, columns: columns });
+        return { rows: rows, columns: columns };
     }
 
     public static async statementUpdate(conn: any, query: string | KnSQLOptions, params?: KnDBParam) : Promise<KnResultSet> {
@@ -65,7 +65,7 @@ export class OdbcDBQuery {
         const rows = await stm.execute();
         let count = rows.count;
         let columns = rows.columns;
-        return Promise.resolve({ rows: { affectedRows: count }, columns: columns });
+        return { rows: { affectedRows: count }, columns: columns };
     }
 
     public static  beginWork(conn: any) : Promise<void> {

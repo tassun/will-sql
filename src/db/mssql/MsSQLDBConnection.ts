@@ -3,7 +3,7 @@ import { KnDBConfig } from "../KnDBConfig";
 import { MsSQLPoolManager } from './MsSQLPoolManager';
 
 export class MsSQLDBConnection {
-    private config: KnDBConfig;
+    private readonly config: KnDBConfig;
 
     constructor(config: KnDBConfig) {
         this.config = config;
@@ -18,14 +18,14 @@ export class MsSQLDBConnection {
         if(transaction) {
             let request = transaction.request();
             request.transaction = transaction;
-            return Promise.resolve(request);
+            return request;
         }
-        return Promise.resolve(pool.request());
+        return pool.request();
     }
 
     public async getTransaction() : Promise<Transaction> {
         let pool = await this.getPool();
-        return Promise.resolve(pool.transaction());
+        return pool.transaction();
     }
     
     public static releaseConnection(conn?: ConnectionPool) {

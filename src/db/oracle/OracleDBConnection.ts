@@ -3,7 +3,7 @@ import { KnDBConfig } from "../KnDBConfig";
 import { OraclePoolManager } from './OraclePoolManager';
 
 export class OracleDBConnection {
-    private config: KnDBConfig;
+    private readonly config: KnDBConfig;
 
     constructor(config: KnDBConfig) {
         this.config = config;
